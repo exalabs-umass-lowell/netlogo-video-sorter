@@ -30,5 +30,3 @@ jobs:
           branch: gh-pages
           # This uses your personal admin power to bypass the Org restriction
           token: ${{ secrets.DEPLOY_TOKEN }}
-            publish_dir: ./build
-            publish_branch: gh-pages
