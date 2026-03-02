@@ -8,15 +8,14 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "predeploy": "npm run build"
+    //"deploy": "gh-pages -d build"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "autoprefixer": "^10.4.23",
-    "gh-pages": "^6.3.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18"
   },
