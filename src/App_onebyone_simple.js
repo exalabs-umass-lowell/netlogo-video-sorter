@@ -591,6 +591,7 @@ function Timerbox({ start, time_to_choose }) {
 function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
   if (!item) return null;
   console.log("In video card, "+fadeAnimation);
+  console.log("URL: "+item.url);
   return (
     <Box
       onClick={onChoose}
@@ -616,7 +617,7 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
     >
       <div style={{ marginBottom: 8, fontWeight: 'bold', color: '#000', }}>{item.name || item.id}</div>
       <img
-        src={item.url}
+        src={`https://exalabs-umass-lowell.github.io/netlogo-video-sorter/${encodeURI(item.url)}`}
         controls
         style={{ width: "100%", height: "320px", objectFit: "cover", borderRadius: 6, gap: '10px 10px', }}
       />
