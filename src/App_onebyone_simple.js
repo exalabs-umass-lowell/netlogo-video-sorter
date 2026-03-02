@@ -1211,7 +1211,7 @@ function renderEmail() {
     })
     .catch((err) => {
       console.error(err);
-      alert("Error sending email");
+      alert("Error sending email"+err);
     });
 
 }
