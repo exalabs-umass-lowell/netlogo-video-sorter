@@ -591,7 +591,6 @@ function Timerbox({ start, time_to_choose }) {
 function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
   if (!item) return null;
   console.log("In video card, "+fadeAnimation);
-  console.log("URL: "+item.url);
   return (
     <Box
       onClick={onChoose}
