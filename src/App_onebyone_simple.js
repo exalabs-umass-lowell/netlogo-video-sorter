@@ -1197,9 +1197,10 @@ emailjs.send('service_oua0645', 'template_0sn1aba', {
 
 function renderEmail() {
   let [resultsFile, resultsContent] = getFile();
+  const file = new File([resultsContent], resultsFile, { type: "text/csv" });
   const formData = new FormData();
-  formData.append("file", resultsFile);
-  console.log("Sending ", resultsFile);
+  formData.append("file", file);
+  console.log("Sending ", file);
   fetch("https://swarm-backend-ga0y.onrender.com/send-email", {
     method: "POST",
     body: formData
