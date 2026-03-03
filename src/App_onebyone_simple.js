@@ -174,7 +174,7 @@ const floatFadeIn = keyframes`
           ...it,
           _idx: idx,
           id: it.id || String(idx),
-          url: makeUrl((it.id || String(idx)).replace(/^\//, "")),
+          url: makeUrl((it.id || String(idx))),
         })));
         
       } catch (err) {
