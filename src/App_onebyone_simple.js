@@ -982,8 +982,8 @@ function HelpBox({ headline, msg, xpos, ypos }) {
 const parseParams = (filename) => {
     const params = [];
     const part_to_parse = filename.split("/").pop() || filename;  // get last part of filename
-    const is_gif = filename.includes(".gif"); // is file .gif?
-    let param_names = part_to_parse.split(".gif");
+    const is_gif = filename.includes(".GIF"); // is file .gif?
+    let param_names = part_to_parse.split(".GIF");
     param_names = param_names[0].split("_"); // get params and values
     const date = param_names[0];
     const param_parts = is_gif ? param_names.slice(1) : param_names; // split by parameters if the file is a gif
