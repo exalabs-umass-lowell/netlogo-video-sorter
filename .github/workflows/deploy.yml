@@ -25,6 +25,8 @@ jobs:
         run: |
           npm install
           npm run build
+          echo "Listing all swarm-videos files in build:"
+          ls -R build/swarm-videos
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
@@ -33,3 +35,4 @@ jobs:
           branch: gh-pages
           # This uses your personal admin power to bypass the Org restriction
           token: ${{ secrets.GITHUB_TOKEN }}
+          clean: true
