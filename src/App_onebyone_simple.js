@@ -988,9 +988,14 @@ const parseParams = (filename) => {
     const date = param_names[0];
     const param_parts = is_gif ? param_names.slice(1) : param_names; // split by parameters if the file is a gif
     param_parts.forEach((part) => {
-        const [paramtype, paramval] = part.split("^"); // split by type of parameter (ex. vision) and value
+        /*const [paramtype, paramval] = part.split("~"); // split by type of parameter (ex. vision) and value
         if (paramtype && paramval) {
             params.push(paramtype + ":" + parseFloat(paramval)); // if there is a parameter type and value, then pair them
+        }*/
+        const match = part.match(/^([a-zA-Z]+)([0-9.]+)$/);
+        if (match) {
+            const [, paramtype, paramval] = match;
+            params.push(`${paramtype}:${parseFloat(paramval)}`);
         }
     });
     console.log("in function: "+params);
