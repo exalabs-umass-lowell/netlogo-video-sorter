@@ -618,7 +618,6 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
       <div style={{ marginBottom: 8, fontWeight: 'bold', color: '#000', }}>{item.name || item.id}</div>
       <img
         src={process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "")}
-        alt="GIF"
         controls
         style={{ width: "100%", height: "320px", objectFit: "cover", borderRadius: 6, gap: '10px 10px', }}
       />
@@ -751,7 +750,6 @@ function RankCard({ item, index, position = "left" }) {
         </Typography>
       <img
         src={process.env.PUBLIC_URL+'/'+url}
-        alt="GIF"
         controls
         style={{ width: 'flex', height: "320px", borderRadius: 2 }}
       />
