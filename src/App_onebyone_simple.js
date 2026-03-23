@@ -70,6 +70,7 @@ export default function VideoPairApp_simple() {
   const [numChanges, setNumChanges] = useState(0); // this is used to determine which results to display
   const [titleFloat, setTitleFloat] = useState(false); // for floating animation for a header
   const [betas, setBetas] = useState({}); // bradley-terry probabilities of the next videos being selected
+  const [numVideos, setNumVideos] = useState(0);
 
 useEffect(() => {
   const timer = setTimeout(() => {
@@ -197,6 +198,8 @@ function generatePairs(videos) {
           betavals[v.id] = 0;
         });
         setBetas(betavals);
+        setNumVideos(pairs.length);
+        console.log("pairs length: "+pairs.length);
       } catch (err) {
         console.error(err);
       } finally {
@@ -244,10 +247,18 @@ useEffect(() => {
   }
   setSurveyVids(filtered);
 
-  const p = generatePairs(items);
+  const p = generatePairs(filtered);
   p.sort(() => Math.random() - 0.5); // shuffle
+  for (var i=0; i<pairs.length; i++) {
+     console.log("pair "+i+": "+pairs[i]);
+  }
   setPairs(p);
-  setPair(p[0]);
+  setPair(pair[0]);
+  setNumVideos(pairs.length);
+  console.log("in behaviors and items: "+numVideos);
+  for (var i=0; i<pairs.length; i++) {
+    console.log(pairs[i]);
+  }
 }, [behavior, items]);
 
 
@@ -260,9 +271,13 @@ useEffect(() => {
   }
   
   const shuffled = shuffle(surveyVids);
+  console.log("shuffled:");
+  console.log(shuffled);
   setCurrent(shuffled[0]);
-  setPair([shuffled[0], shuffled[1]]);
-  setPool(shuffled.slice(2));
+  //setPair([shuffled[0], shuffled[1]]);
+  setPair(pairs[vidnum]);
+  setPool(shuffled);
+  //setPool(shuffled.slice(2));
   setEnded(false);
   setResults([]);
   setTimes([]);
@@ -328,10 +343,14 @@ setBetas(prev => {
       notChosen,
       elapsed,
     });
-    setPairs(p => p.slice(1));
-    setPair(nextPair);
-    setPool(p => p.slice(1));
-    setVidnum(v => v + 1);
+    setPairs(p => p.slice(1)); // remove the current pair from the set of pairs to display
+    setPair(nextPair); // set current pair to top pair
+    //setPool(p => p.slice(1)); 
+    setVidnum(v => v + 1); // increment pair number 
+    console.log("pool is now: ");
+    console.log(pool);
+    console.log("pairs are now: ");
+    console.log(pairs);
     setVisible(true);
   }, 500);
   setStart(performance.now());
@@ -342,11 +361,11 @@ useEffect(() => {
   if (!current_video_pair) return;
   const {chosen, notChosen, elapsed} = current_video_pair;
   if (!chosen || !notChosen) return;
-  console.log("chosen video is "+chosen.id+", "+chosen.name);
-  console.log("unchosen video is "+notChosen.id+", "+notChosen.name);
-  console.log("times length is "+String(times.length));
+  //console.log("chosen video is "+chosen.id+", "+chosen.name);
+  //console.log("unchosen video is "+notChosen.id+", "+notChosen.name);
+  //console.log("times length is "+String(times.length));
   setRankings((prev) => { // ordering from least to most complex
-    console.log("number of rankings? "+String(rankings.length));
+    //console.log("number of rankings? "+String(rankings.length));
     const ranking = [...prev];
     // inserting the newly selected video into list of ranked videos
     let chosenVidIndex = ranking.findIndex((v) => v.id == chosen.id);
@@ -363,7 +382,7 @@ useEffect(() => {
       ranking.splice(0,0,notChosen);
       ranking.splice(1,0,chosen);
     }
-    ranking.forEach(v => console.log("ranking: "+String(v.id)));
+    //ranking.forEach(v => console.log("ranking: "+String(v.id)));
     return ranking;
   });
   setStart(performance.now());
@@ -381,7 +400,7 @@ useEffect(() => {
     window.addEventListener("keydown", handler);
     rankings.forEach((video, index) => {
       rankedVideos[video.id] = index;
-      console.log("ended id: "+video+", index: "+index);
+      //console.log("ended id: "+video+", index: "+index);
     });
       setTimeout(() => {
          setTitleFloat(true);
@@ -580,7 +599,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
       </Box>
       <div style={{ display: "flex", justifyContent: 'center', alignItems: 'stretch', padding: '15px', gap: '10px' }}>
-        <ProgressBar number={chosenVids.length} total={surveyVids.length} />
+        <ProgressBar number={vidnum - 1} total={numVideos+1} />
       </div>      
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '30px', color: '#FFF' }}>
         <span>Click the video you think is{' '}</span>&nbsp;
@@ -644,8 +663,8 @@ function ProgressBar({ number, total }) {
 
 function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
   if (!item) return null;
-  console.log("In video card, "+fadeAnimation);
-  console.log("URL: "+item.url);
+  //console.log("In video card, "+fadeAnimation);
+  //console.log("URL: "+item.url);
   return (
     <Box
       onClick={onChoose}
@@ -654,7 +673,7 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
       sx={{
         cursor: "pointer",
         width: "50%",
-        border: "10px solid #ddd",
+        border: "0px solid #ddd",
         borderRadius: 8,
         padding: 4,
         margin: '10px',
@@ -1039,8 +1058,9 @@ const parseParams = (filename) => {
     const is_gif = filename.includes(".gif"); // is file .gif?
     let param_names = part_to_parse.split(".gif");
     param_names = param_names[0].split("_"); // get params and values
+    console.log("param names are: ", param_names);
     const date = param_names[0];
-    const param_parts = is_gif ? param_names.slice(1) : param_names; // split by parameters if the file is a gif
+    const param_parts = param_names; // is_gif ? param_names.slice(1) : param_names; // split by parameters if the file is a gif
     param_parts.forEach((part) => {
         /*const [paramtype, paramval] = part.split("~"); // split by type of parameter (ex. vision) and value
         if (paramtype && paramval) {
@@ -1176,7 +1196,7 @@ const downloadOrderAsCSV = () => {
 };
 
 
-function EmailBox({ xpos, ypos}) {
+/*function EmailBox({ xpos, ypos}) {
 
       // Download CSV results
     return (
@@ -1206,6 +1226,63 @@ function EmailBox({ xpos, ypos}) {
         </Button>
       </Box>
     );
+}*/
+function EmailBox({ xpos, ypos }) {
+  const [open, setOpen] = React.useState(false);
+
+  async function renderEmail() {
+    try {
+      let [resultsFile, resultsContent] = getFile();
+      const file = new File([resultsContent], resultsFile, { type: "text/csv" });
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("https://swarm-backend-ga0y.onrender.com/send-email", {
+        method: "POST",
+        body: formData
+      });
+
+      const text = await res.text();
+      console.log(text);
+
+      setOpen(true); // open popup
+    } catch (err) {
+      console.error(err);
+      alert("Error sending email " + err);
+    }
+  }
+
+  return (
+    <>
+      <Box sx={{ position: "relative", display: "inline-block", top: "20%" }}>
+        <Button
+          sx={{
+            width: "100%",
+            margin: "5px",
+            borderRadius: "5px",
+            backgroundColor: "rgba(128, 207, 255, 0.5)",
+            padding: "20px",
+            color: "#0022CC"
+          }}
+          onClick={renderEmail}
+        >
+          <Typography sx={{ fontWeight: "bold", fontSize: "30px" }}>
+            Submit
+          </Typography>
+        </Button>
+      </Box>
+
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogContent>
+          <Typography><strong>Submission complete</strong></Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>OK</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 }
 
 
@@ -1250,8 +1327,9 @@ function renderEmail() {
   })
     .then((res) => res.text())
     .then((text) => {
-      console.log(text); // "Email sent!"
-      alert(text);
+        text = "Submission complete!";
+        console.log(text); // "Email sent!"
+        alert(text);
     })
     .catch((err) => {
       console.error(err);
