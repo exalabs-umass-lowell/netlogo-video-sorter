@@ -248,14 +248,16 @@ useEffect(() => {
   setSurveyVids(filtered);
 
   const p = generatePairs(filtered);
-  p.sort(() => Math.random() - 0.5); // shuffle
-  for (var i=0; i<pairs.length; i++) {
-     console.log("pair "+i+": "+pairs[i]);
+  var sorted = [...p].sort(() => Math.random() - 0.5); // shuffle
+  console.log("behavior is "+behavior);
+  setPairs(sorted);
+  for (var i=0; i<sorted.length; i++) {
+    console.log(sorted[i]);
   }
-  setPairs(p);
-  setPair(pair[0]);
-  setNumVideos(pairs.length);
+  setPair(pairs[0]);
+  setNumVideos(sorted.length);
   console.log("in behaviors and items: "+numVideos);
+
   for (var i=0; i<pairs.length; i++) {
     console.log(pairs[i]);
   }
@@ -448,7 +450,14 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
   const restart = () => {
     console.log("in restart");
     loadVideos();
-    const s = shuffleNoConsecutive(items);
+    var s = shuffleNoConsecutive(items);
+    var behavior = s[0].id.split("/")[2];
+    while (behavior === "unknown") {
+      console.log("Nope it's unknown");
+      s = shuffleNoConsecutive(items);
+      behavior = s[0].id.split("/")[2];
+    }
+    setBehavior(s[0].id.split("/")[2]);
     console.log("Number of items is "+String(items.length));
     console.log("Item first is "+s[0].url);
     setPool(s);
@@ -466,7 +475,11 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
     }
     setResults([]);
     setRankings([]);
-    setBehavior(s[0].id.split("/")[2]);
+    if (numVideos == 0 && sorted.length > 0) {
+       location.reload()
+    }
+
+    console.log("behavior: "+behavior);
     setEnded(false);
     setTitleFloat(false);
     console.log("setting float");
