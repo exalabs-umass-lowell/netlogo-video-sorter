@@ -610,10 +610,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
          <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
-      </Box>
-      <div style={{ display: "flex", justifyContent: 'center', alignItems: 'stretch', padding: '15px', gap: '10px' }}>
-        <ProgressBar number={vidnum - 1} total={numVideos+1} />
-      </div>      
+      </Box>   
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '30px', color: '#FFF' }}>
         <span>Click the video you think is{' '}</span>&nbsp;
         <span><strong>more complex</strong></span>&nbsp;
@@ -624,7 +621,17 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
         <VideoCard item={pair[0]} onChoose={() => onChoose("left")} position="left" fadeAnimation={visible} />
         <VideoCard item={pair[1]} onChoose={() => onChoose("right")} position="right" fadeAnimation={visible} />
       </div>
-
+      <div style={{  padding: '15px', }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: 'center',  marginBottom: '10px',}}>
+           <Typography sx={{fontSize: 30,}}>Progress</Typography>
+	   <div style={{ display: "flex", alignItems: 'center', gap: '10px',}}>
+              <Typography sx={{fontSize: 30, fontWeight: 'bold',}}>{vidnum - 1}</Typography>/<Typography sx={{fontSize: 20,}}>{numVideos+1} pairs complete</Typography>
+           </div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", }} >
+           <ProgressBar number={vidnum - 1} total={numVideos+1} />
+        </div>
+      </div>   
 
       </div>
       
