@@ -497,7 +497,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
 
   if (startInstructions) {
     return (
-      <div style={{ justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), radial-gradient(circle at center, rgba(0,0,204,0.6) 50%, rgba(179,217,255, 0.6) 100%), url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
+      <div style={{ justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
       <Box sx={{
          width: '100%',
          height: 'flex',
@@ -506,7 +506,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       }}>
          <Box 
             component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',}}
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', top: '0px',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
          <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
@@ -543,8 +543,9 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
     });
     
     return (
+      //background: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), radial-gradient(circle at center, rgba(0,0,204,0.6) 50%, rgba(179,217,255, 0.6) 100%), url('general-white-blue.jpg')`
       <>
-      <div style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), radial-gradient(circle at center, rgba(0,0,204,0.6) 50%, rgba(179,217,255, 0.6) 100%), url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
+      <div style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
       <Box sx={{
          width: '100%',
          height: 'flex',
@@ -595,7 +596,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
   }
   
   return (
-    <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', flexDirection:'column', minHeight: '100vh', overflowX: 'hidden', background: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), radial-gradient(circle at center, rgba(0,0,204,0.6) 50%, rgba(179,217,255, 0.6) 100%), url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
+    <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', flexDirection:'column', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
     <div style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
       <div>
       <Box sx={{
