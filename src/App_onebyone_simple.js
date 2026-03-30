@@ -510,7 +510,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
             sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: '15px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
       </Box>
         <MainHeader fadeAnimation={titleFloat} />
         <Button sx= {{ gap: '150px', margin: '100px 0'}} variant="contained" onClick={() => {
@@ -559,10 +559,10 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
             sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: '13px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
       </Box>
         <Box sx={{ justifyContent: 'center', alignItems: 'center', position: 'relative', opacity: titleFloat ? 1 : 0, transform: titleFloat ? "translateY(0)" : "translateY(-50px)", transition: "opacity 1s ease-out, transform 1s ease-out", }}>
-           <Typography sx={{fontWeight: 'bold', fontSize: '50px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#000',}}>Survey complete</Typography>
+           <Typography sx={{fontWeight: 'bold', fontSize: '50px', fontType: 'Helvetica', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#000',}}>Survey complete</Typography>
         </Box>
         <EmailBox xpos='0%' ypos='20%'/>
         <Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#FFF', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)' }, fontSize: '25px', }} onClick={restart}>Restart</Button>
@@ -610,12 +610,11 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
             sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', position: 'fixed',top:'0px',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: '13px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
       </Box>   
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '30px', color: '#000' }}>
-        <span>Click the video you think is{' '}</span>&nbsp;
-        <span><strong>more complex</strong></span>&nbsp;
-        <span>.</span> 
+        <span style={{ fontFamily: '"Playfair Display", serif' }}>Click the video you think is{' '}</span>&nbsp;
+        <span style={{ fontFamily: '"Playfair Display", serif' }}><strong>more complex</strong></span>&nbsp;
       </Box>
       
       <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
@@ -624,9 +623,9 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       </div>
       <div style={{  padding: '15px', }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: 'center',  marginBottom: '10px',}}>
-           <Typography sx={{fontSize: 30,}}>Progress</Typography>
+           <Typography sx={{fontSize: 22,}}>PROGRESS</Typography>
 	   <div style={{ display: "flex", alignItems: 'center', gap: '10px',}}>
-              <Typography sx={{fontSize: 30, fontWeight: 'bold',}}>{vidnum - 1}</Typography>/<Typography sx={{fontSize: 20,}}>{numVideos+1} pairs complete</Typography>
+              <Typography sx={{fontSize: 30, fontWeight: 'bold',}}>{vidnum - 1}</Typography>/<Typography sx={{fontSize: 22,}}>{numVideos+1} pairs complete</Typography>
            </div>
         </div>
         <div style={{ display: "flex", justifyContent: "center", }} >
