@@ -503,13 +503,14 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          height: 'flex',
          display: 'flex',
          backgroundColor: "rgba(0,0,0,0.5)",
+ 	 position: 'fixed', top:'0px', 
       }}>
          <Box 
             component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', top: '0px',}}
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
       </Box>
         <MainHeader fadeAnimation={titleFloat} />
         <Button sx= {{ gap: '150px', margin: '100px 0'}} variant="contained" onClick={() => {
@@ -551,20 +552,17 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          height: 'flex',
          display: 'flex',
          backgroundColor: "rgba(0,0,0,0.5)",
-         top: 0,
-         left: 0,
-         zIndex: 1000,
-         position: 'absolute',
+ 	 position: 'fixed', top:'0px', 
       }}>
          <Box 
             component="img"
             sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
       </Box>
         <Box sx={{ justifyContent: 'center', alignItems: 'center', position: 'relative', opacity: titleFloat ? 1 : 0, transform: titleFloat ? "translateY(0)" : "translateY(-50px)", transition: "opacity 1s ease-out, transform 1s ease-out", }}>
-           <Typography sx={{fontWeight: 'bold', fontSize: '50px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#FFF',}}>Survey complete</Typography>
+           <Typography sx={{fontWeight: 'bold', fontSize: '50px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#000',}}>Survey complete</Typography>
         </Box>
         <EmailBox xpos='0%' ypos='20%'/>
         <Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#FFF', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)' }, fontSize: '25px', }} onClick={restart}>Restart</Button>
@@ -581,6 +579,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          height: 'flex',
          display: 'flex',
          backgroundColor: "rgba(0,0,0,0.5)",
+ 	 position: 'fixed', top:'0px', 
       }}>
          <Box 
             component="img"
@@ -604,15 +603,16 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          height: 'flex',
          display: 'flex',
          backgroundColor: "rgba(0,0,0,0.5)",
+         position: 'fixed',top:'0px',
       }}>
          <Box 
             component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',}}
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', position: 'fixed',top:'0px',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
          <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
       </Box>   
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '30px', color: '#FFF' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '30px', color: '#000' }}>
         <span>Click the video you think is{' '}</span>&nbsp;
         <span><strong>more complex</strong></span>&nbsp;
         <span>.</span> 
@@ -1374,7 +1374,7 @@ function MainHeader({ fadeAnimation }) {
       transform: fadeAnimation ? "translateY(0)" : "translateY(-50px)",
       transition: "opacity 1s ease-out, transform 1s ease-out",
     }}>
-      <Typography sx={{fontWeight: 'bold', fontSize: '70px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', padding: '20px', color: '#FFF', }}>
+      <Typography sx={{fontWeight: 'bold', fontSize: '70px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', padding: '20px', color: '#000', }}>
         Welcome to the swarm complexity ranking survey!
       </Typography>
     </Box>
