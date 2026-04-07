@@ -228,7 +228,7 @@ useEffect(() => {
         if (startedSurvey.current) return;
         startedSurvey.current = true;
         setBehavior(video.id.split("/")[2]);
-
+        
         setStartvid(video);
         console.log("behavior is "+String(behavior));
   }
@@ -458,6 +458,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       behavior = s[0].id.split("/")[2];
     }
     setBehavior(s[0].id.split("/")[2]);
+    setBehavior("helical");
     console.log("Number of items is "+String(items.length));
     console.log("Item first is "+s[0].url);
     setPool(s);
@@ -478,7 +479,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
     if (numVideos == 0 && sorted.length > 0) {
        location.reload()
     }
-
+    
     console.log("behavior: "+behavior);
     setEnded(false);
     setTitleFloat(false);
@@ -1318,21 +1319,36 @@ const attachments = [
   }
 ];
 console.log("Sending "+resultsFile);
-//const handleEmail = (e) => {
-//e.preventDefault();
-emailjs.send('service_oua0645', 'template_0sn1aba', {
+
+/*emailjs.send('service_oua0645', 'template_0sn1aba', {
   name: 'Sriram',
   email: 'sriramk1000@gmail.com',
   message: 'Please find attached CSV results:\n'+resultsContent,
-  //content: resultsContent
 }, '79TzH81kp9RcNqdrX')
 .then(response => {
   console.log('Email sent successfully!', response.status, response.text);
 })
 .catch(err => {
   console.error('Failed to send email.', err);
-});
-//}
+});*/
+
+fetch('https://swarm-backend-ga0y.onrender.com/send-email', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    to: recipientEmail,
+    subject: 'Swarm Ranking Survey Results',
+    text: 'Please find your results:\n' + resultsContent,
+    html: `<p>Please find your results:</p><pre>${resultsContent}</pre>`,
+  }),
+})
+.then(res => res.json())
+.then(data => {
+  if (data.success) console.log('Email sent!', data.messageId);
+  else console.error('Failed:', data.error);
+})
+.catch(err => console.error('Request failed:', err));
+
 };
 
 function renderEmail() {
