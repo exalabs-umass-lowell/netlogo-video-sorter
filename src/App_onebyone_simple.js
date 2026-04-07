@@ -1277,7 +1277,7 @@ function EmailBox({ xpos, ypos }) {
   const file = new File([resultsContent], resultsFile, { type: "text/csv" });
   // sending the information from the survey in the expected format
   const formData = new FormData();
-  formData.append("to", recipientEmail);
+  formData.append("to", "Sriram_Krishnamoorthy@student.uml.edu");
   formData.append("subject", "Swarm Ranking Survey Results");
   formData.append("text", "Please find attached CSV results");
   formData.append("file", file);
