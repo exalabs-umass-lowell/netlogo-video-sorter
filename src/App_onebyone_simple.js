@@ -1354,19 +1354,27 @@ fetch('https://swarm-backend-ga0y.onrender.com/send-email', {
 function renderEmail() {
   let [resultsFile, resultsContent] = getFile();
   const file = new File([resultsContent], resultsFile, { type: "text/csv" });
+  // sending the information from the survey in the expected format
   const formData = new FormData();
+  formData.append("to", recipientEmail);
+  formData.append("subject", "Swarm Ranking Survey Results");
+  formData.append("text", "Please find attached CSV results");
   formData.append("file", file);
   console.log("Sending ", file);
   fetch("https://swarm-backend-ga0y.onrender.com/send-email", {
     method: "POST",
     body: formData
   })
-    .then((res) => res.text())
-    .then((text) => {
-        text = "Submission complete!";
-        console.log(text); // "Email sent!"
-        alert(text);
-    })
+.then(async (res) => {
+  const text = await res.text();
+  console.log("Server response:", text);
+
+  if (!res.ok) {
+    throw new Error(text);
+  }
+
+  alert("Submission complete!");
+})
     .catch((err) => {
       console.error(err);
       alert("Error sending email"+err);
