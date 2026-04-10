@@ -217,7 +217,11 @@ useEffect(() => {
 
 useEffect(() => {
   if (items.length > 0 && !startedSurvey.current) {
-    startSurvey(items[0]);
+    var i=0;
+    while (items[i].id.split("/")[2] != "linear") {
+      i = i+1;
+    }
+    startSurvey(items[i]);
   }
 }, [items]);
 
@@ -458,7 +462,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       behavior = s[0].id.split("/")[2];
     }
     setBehavior(s[0].id.split("/")[2]);
-    setBehavior("helical");
+    setBehavior("linear");
     console.log("Number of items is "+String(items.length));
     console.log("Item first is "+s[0].url);
     setPool(s);
