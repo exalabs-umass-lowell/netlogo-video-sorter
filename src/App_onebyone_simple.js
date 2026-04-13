@@ -71,6 +71,7 @@ export default function VideoPairApp_simple() {
   const [titleFloat, setTitleFloat] = useState(false); // for floating animation for a header
   const [betas, setBetas] = useState({}); // bradley-terry probabilities of the next videos being selected
   const [numVideos, setNumVideos] = useState(0);
+  const specificBehavior = "linear";
 
 useEffect(() => {
   const timer = setTimeout(() => {
@@ -218,7 +219,7 @@ useEffect(() => {
 useEffect(() => {
   if (items.length > 0 && !startedSurvey.current) {
     var i=0;
-    while (items[i].id.split("/")[2] != "linear") {
+    while (items[i].id.split("/")[2] != specificBehavior) {
       i = i+1;
     }
     startSurvey(items[i]);
@@ -367,8 +368,8 @@ useEffect(() => {
   if (!current_video_pair) return;
   const {chosen, notChosen, elapsed} = current_video_pair;
   if (!chosen || !notChosen) return;
-  //console.log("chosen video is "+chosen.id+", "+chosen.name);
-  //console.log("unchosen video is "+notChosen.id+", "+notChosen.name);
+  console.log("chosen video is "+chosen.id+", "+chosen.name);
+  console.log("unchosen video is "+notChosen.id+", "+notChosen.name);
   //console.log("times length is "+String(times.length));
   setRankings((prev) => { // ordering from least to most complex
     //console.log("number of rankings? "+String(rankings.length));
@@ -462,7 +463,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       behavior = s[0].id.split("/")[2];
     }
     setBehavior(s[0].id.split("/")[2]);
-    setBehavior("linear");
+    setBehavior(specificBehavior);
     console.log("Number of items is "+String(items.length));
     console.log("Item first is "+s[0].url);
     setPool(s);
@@ -518,7 +519,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          <Typography sx={{ margin: '15px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
       </Box>
         <MainHeader fadeAnimation={titleFloat} />
-        <Button sx= {{ gap: '150px', margin: '100px 0'}} variant="contained" onClick={() => {
+        <Button sx={{ margin: '48px 0 0', fontFamily: "'DM Mono', monospace", fontWeight: 300, fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' }, }} variant="contained" onClick={() => {
            setStartInstructions(false);
            setInitSurvey(true);
            setTitleFloat(true);
@@ -534,18 +535,14 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
     notSelectionTimes = {};
     rankings.forEach((video, index) => {
       rankedVideos[video.id+'NAME:'+video.name] = index;
-      console.log("id: "+video+", index: "+index);
     });
-    times.forEach((time) => {
-      chosenVids.forEach((chosenVid) => {
-        selectionTimes[time] = chosenVid;
-      });
+    times.forEach((time, index) => {
+        selectionTimes[time] = chosenVids[index];
+        console.log("selected "+selectionTimes[time]);
     });
-    times.forEach((time) => {
-      notChosenVids.forEach((notChosenVid) => {
-        notSelectionTimes[time] = notChosenVid;
-      });
-      console.log("time: ", time);
+    times.forEach((time, index) => {
+        notSelectionTimes[time] = notChosenVids[index];
+        console.log("not selected "+notSelectionTimes[time]);
     });
     
     return (
@@ -564,13 +561,13 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
             sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '13px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: '12px 0 12px 10px', fontFamily: "'DM Mono', monospace", fontWeight: 300, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#9a9690', borderLeft: '1px solid rgba(26,25,23,0.15)', paddingLeft: '10px', }}> Exalabs UMass Lowell </Typography>
       </Box>
         <Box sx={{ justifyContent: 'center', alignItems: 'center', position: 'relative', opacity: titleFloat ? 1 : 0, transform: titleFloat ? "translateY(0)" : "translateY(-50px)", transition: "opacity 1s ease-out, transform 1s ease-out", }}>
            <Typography sx={{fontWeight: 'bold', fontSize: '50px', fontType: 'Helvetica', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#000',}}>Survey complete</Typography>
         </Box>
         <EmailBox xpos='0%' ypos='20%'/>
-        <Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#FFF', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)' }, fontSize: '25px', }} onClick={restart}>Restart</Button>
+        <Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#000', border: '1px solid #000', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)', color: '#FFF', border: '1px solid #000',}, fontSize: '25px', }} onClick={restart}>Restart</Button>
        </div>
       </>
     );
@@ -600,7 +597,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
   }
   
   return (
-    <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', flexDirection:'column', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
+    <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: '#f5f3ef', transition: 'background-color 0.5s ease', }}>
     <div style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
       <div>
       <Box sx={{
@@ -609,6 +606,8 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          display: 'flex',
          backgroundColor: "rgba(0,0,0,0.5)",
          position: 'fixed',top:'0px',
+         zIndex: 100,
+         padding: '0 24px',
       }}>
          <Box 
             component="img"
@@ -617,7 +616,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          />
          <Typography sx={{ margin: '13px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
       </Box>   
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '30px', color: '#000' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', color: '#000' }}>
         <span style={{ fontFamily: '"Playfair Display", serif' }}>Click the video you think is{' '}</span>&nbsp;
         <span style={{ fontFamily: '"Playfair Display", serif' }}><strong>more complex</strong></span>&nbsp;
       </Box>
@@ -626,7 +625,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
         <VideoCard item={pair[0]} onChoose={() => onChoose("left")} position="left" fadeAnimation={visible} />
         <VideoCard item={pair[1]} onChoose={() => onChoose("right")} position="right" fadeAnimation={visible} />
       </div>
-      <div style={{  padding: '15px', }}>
+      <div style={{ padding: '20px 24px 32px', maxWidth: '900px', margin: '0 auto', width: '100%'}}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: 'center',  marginBottom: '10px',}}>
            <Typography sx={{fontSize: 22,}}>PROGRESS</Typography>
 	   <div style={{ display: "flex", alignItems: 'center', gap: '10px',}}>
@@ -677,7 +676,7 @@ function Timerbox({ start, time_to_choose }) {
 
 function ProgressBar({ number, total }) {
     return (
-    <Box sx={{ width:'100%', height:24, display:'flex', borderRadius: '5px', position: 'relative',  overflow: 'hidden' }}>
+    <Box sx={{ display: 'flex', width:'100%', height:24, display:'flex', borderRadius: '5px', position: 'relative',  overflow: 'hidden' }}>
       <Box sx={{backgroundColor: '#0EB8E6', width: `${(number/total)*100}%`}}>
       </Box>
       <Box sx={{backgroundColor: '#778385', width: `${100 - (number/total)*100}%`}}/>
@@ -688,8 +687,6 @@ function ProgressBar({ number, total }) {
 
 function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
   if (!item) return null;
-  //console.log("In video card, "+fadeAnimation);
-  //console.log("URL: "+item.url);
   return (
     <Box
       onClick={onChoose}
@@ -697,29 +694,32 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
       tabIndex={0}
       sx={{
         cursor: "pointer",
-        width: "50%",
-        border: "0px solid #ddd",
+        width: '100%',
+        border: "1.5px solid rgba(26,25,23,0.1)",
         borderRadius: 8,
-        padding: 4,
-        margin: '10px',
+        padding: '20px',
+	margin: position === "left" ? '0 2% 0 16%' : '0 16% 0 2%',
         boxSizing: "border-box",
-        backgroundColor: 'rgba(179, 217, 255, 0.67)', 
+        backgroundColor: '#ffffff',
         '&:hover': { boxShadow: '0px 0px 40px #54A6F0' },
-        opacity: fadeAnimation ? 1 : 0, 
+        '&:active': { transform: 'translateY(0px) scale(0.995)' },
+        opacity: fadeAnimation ? 1 : 0,
         transform: fadeAnimation ? "translateX(0)" : position === "left" ? "translateX(-30px)" : "translateX(30px)",
         transition: "opacity 1s ease-out, transform 1s ease-out",
       }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") onChoose();
-      }}
+      onKeyDown={(e) => { if (e.key === "Enter") onChoose(); }}
     >
-      <div style={{ marginBottom: 8, fontWeight: 'bold', color: '#000', }}>{item.name || item.id}</div>
-      <img
-        src={process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "")}
-        controls
-        style={{ width: "100%", height: "320px", objectFit: "cover", borderRadius: 6, gap: '10px 10px', }}
-      />
-      <div style={{ marginTop: 8, fontSize: 12, color: "#000" }}></div>
+      <div style={{ marginBottom: '8px', fontFamily: "'DM Mono', monospace", fontWeight: 300, color: '#000', letterSpacing: '0.2em' }}>
+        {item.name || item.id}
+      </div>
+      {item.url && (
+        <div style={{ lineHeight: 0, borderRadius: '2px', overflow: 'hidden', aspectRatio: '1', }}>
+          <img
+            src={process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "")}
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: 'block' }}
+          />
+        </div>
+      )}
     </Box>
   );
 }
@@ -1083,7 +1083,7 @@ const parseParams = (filename) => {
     const is_gif = filename.includes(".gif"); // is file .gif?
     let param_names = part_to_parse.split(".gif");
     param_names = param_names[0].split("_"); // get params and values
-    console.log("param names are: ", param_names);
+    //console.log("param names are: ", param_names);
     const date = param_names[0];
     const param_parts = param_names; // is_gif ? param_names.slice(1) : param_names; // split by parameters if the file is a gif
     param_parts.forEach((part) => {
@@ -1097,7 +1097,7 @@ const parseParams = (filename) => {
             params.push(`${paramtype}:${parseFloat(paramval)}`);
         }
     });
-    console.log("in function: "+params);
+    //console.log("in function: "+params);
     return [date, params];
 }
 
@@ -1109,6 +1109,7 @@ const getFile = () => {
     console.log(formattedDate);
 
     // 2. Map items to CSV rows
+    // a) Mapping the video rankings to the CSV rows
     const csvRows = Object.entries(rankedVideos).map((rankedVid, index) => {
       // Parse parameters again to include their values in the CSV
       console.log("ranked: "+rankedVid);
@@ -1125,7 +1126,7 @@ const getFile = () => {
       //const paramValues = Object.entries(params).map(p => params[p] !== undefined ? params[p] : 'N/A');
       let paramValues = [];
       params.forEach(p => { 
-          console.log("param: "+p);
+          //console.log("param: "+p);
           paramValues.push(p.split(":")[1]);
       });
       return [
@@ -1151,6 +1152,8 @@ const getFile = () => {
       ...csvRows
     ];  //.join('\n');
 
+    // b) Mapping the video selections to the CSV rows
+    console.log("selectionTimes:", JSON.stringify(selectionTimes));
     const choices = Object.entries(selectionTimes).map((selectionTime, index) => {
       // Parse parameters again to include their values in the CSV
       console.log("selectionTime: "+selectionTime);
@@ -1164,7 +1167,7 @@ const getFile = () => {
 
       let paramValues = [];
       params.forEach(p => { 
-          console.log("param: "+p);
+          //console.log("param: "+p);
           paramValues.push(p.split(":")[1]);
       });
       console.log([
@@ -1432,7 +1435,7 @@ function MainHeader({ fadeAnimation }) {
       transform: fadeAnimation ? "translateY(0)" : "translateY(-50px)",
       transition: "opacity 1s ease-out, transform 1s ease-out",
     }}>
-      <Typography sx={{fontWeight: 'bold', fontSize: '70px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', padding: '20px', color: '#000', }}>
+      <Typography sx={{fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 'bold', fontSize: '70px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', padding: '20px', color: '#000', }}>
         Welcome to the swarm complexity ranking survey!
       </Typography>
     </Box>
