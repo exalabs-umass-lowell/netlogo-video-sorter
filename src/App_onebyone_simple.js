@@ -24,7 +24,7 @@ import { keyframes } from "@mui/system";
 import axios from "axios";
 
 // VideoPairApp.jsx
-let demographicsData = {"age": 0, "year": 0}
+let demographicsData = {"age": 0, "year": 0, "major": "", "minor": ""}
 let rankedVideos = {};
 let selectionTimes = {};
 let notSelectionTimes = {};
@@ -1173,8 +1173,9 @@ const getFile = () => {
       });
 
       let demoColumns = ["", "", "", ""];
-      if (index === 0) demoColumns = [];
       if (index === 0) demoColumns = ["", "year", demographicsData["year"]];
+      if (index === 1) demoColumns = ["", "major", demographicsData["major"]];
+      if (index === 2) demoColumns = ["", "minor", demographicsData["minor"]];
 
       return [
         index+1, // Current Rank
@@ -1447,13 +1448,15 @@ function renderEmail() {
 function DemographicsForm({}) {
     const [age, setAge] = useState("");
     const [schoolyear, setSchoolyear] = useState("");
+    const [major, setMajor] = useState("");
+    const [minor, setMinor] = useState("");
     const ages = ["18 - 22 years", "23 - 27 years", "28 - 32 years",  "33 - 37 years", "38 - 42 years", "43 - 47 years"];
     const schoolyears = ["Freshman", "Sophomore", "Junior", "Senior", "Graduate/Master's", "Ph.D/Doctorate"];
     return (
        <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'left', marginLeft: '5%', }}>
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
                <Typography sx={{  }}> Please select which age range applies to you: </Typography>
-                   <Select value={age} onChange={(e) => {
+                   <Select value={age} required onChange={(e) => {
                           setAge(e.target.value);
                           demographicsData["age"] = e.target.value; 
                           console.log("demographics data: ", demographicsData["age"]);
@@ -1467,7 +1470,7 @@ function DemographicsForm({}) {
            </Box>
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
                <Typography sx={{  }}> Please select what year of university you are in: </Typography>
-                   <Select value={schoolyear} onChange={(e) => {
+                   <Select value={schoolyear} required onChange={(e) => {
                           setSchoolyear(e.target.value);
                           demographicsData["year"] = e.target.value; 
                           console.log("demographics data: ", demographicsData["year"]);
@@ -1478,6 +1481,36 @@ function DemographicsForm({}) {
                            </MenuItem>
                        ))}
                    </Select>
+           </Box>
+           <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
+               <Typography sx={{  }}> Enter your major: </Typography>
+                   <TextField
+                        required
+                        id="outlined-required"
+                        label="Required"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setMajor(event.target.value);
+                            demographicsData["major"] = e.target.value;
+                        }}
+                        variant="outlined"
+                        defaultValue="Enter your major"
+                   />
+           </Box>
+           <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
+               <Typography sx={{  }}> Enter your minor (if applicable): </Typography>
+                   <TextField
+                        id="outlined-required"
+                        label="Optional"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setMinor(event.target.value);
+                            demographicsData["minor"] = e.target.value;
+                            if (e.target.value == "Enter your minor") {
+                                demographicsData["minor"] = "";
+                            }
+                        }}
+                        variant="outlined"
+                        defaultValue="Enter your minor"
+                   />
            </Box>
        </Box>
     );
