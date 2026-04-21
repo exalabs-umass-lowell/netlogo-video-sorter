@@ -13,7 +13,9 @@ import {   Button,
   CircularProgress,
   Collapse, 
   IconButton, IconButtonProps,
-  Fade } from '@mui/material';
+  Fade,
+  Menu, MenuProps, MenuItem,
+  Select, SelectChangeEvent } from '@mui/material';
 import { AnimatedBackground, useAnimationControls } from 'animated-backgrounds';
 import { styled } from '@mui/system';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -22,6 +24,7 @@ import { keyframes } from "@mui/system";
 import axios from "axios";
 
 // VideoPairApp.jsx
+let demographicsData = {"age": 0, "year": 0}
 let rankedVideos = {};
 let selectionTimes = {};
 let notSelectionTimes = {};
@@ -47,6 +50,7 @@ export default function VideoPairApp_simple() {
   const startedSurvey = useRef(false); // determine when to start main survey
   const [items, setItems] = useState([]); // full list loaded from JSON
   const [loading, setLoading] = useState(true); // is the data loading
+  const [demographics, setDemographics] = useState(true); // show form for getting user demographic info
   const [startvid, setStartvid] = useState(""); // set the starting video
   const [behavior, setBehavior] = useState(""); // set the behavior to be used in the video
   const [surveyVids, setSurveyVids] = useState([]); // setting the videos to be used in the survey
@@ -81,32 +85,29 @@ useEffect(() => {
   return () => clearTimeout(timer);
 }, []);
 
+// displaying instructions
 useEffect(() => {
   setVisible(false);
   setTimeout(() => {
     setVisible(true);
   }, 500);
-
 }, [startInstructions]);
 
+
+// title text floats into screen
 useEffect(() => {
   setTitleFloat(false);
   setTimeout(() => {
     setTitleFloat(true);
   }, 1000);
-
 }, [display]);
 
 
   var text = ""; // display text at the end
   const startTimeRef = useRef(performance.now());
  
-  /* Sequence of events
-  1. loadVideos();
-  2. startSurvey();
-  3. 
-  */
 
+  // gets the starting video for behavior selection
   useEffect(() => {
      setTimeout(() => {
      if (!startvid) return;
@@ -178,7 +179,6 @@ function generatePairs(videos) {
   // Load json list from JSON video list
   const loadVideos = async() => {
     let mounted = true;
-
       try {
         setLoading(true);
         console.log("LOADING");
@@ -194,6 +194,7 @@ function generatePairs(videos) {
           id: it.id || String(idx),
           url: makeUrl((it.id || String(idx))),
         })));
+        // gets the probability values for each video in the survey ranking
         const betavals = {};
         items.forEach(v => {
           betavals[v.id] = 0;
@@ -210,12 +211,7 @@ function generatePairs(videos) {
   };  
 
 
-useEffect(() => {
-  loadVideos();
-  startTimeRef.current = performance.now();
-  setStart(performance.now());
-}, [initSurvey]);
-
+// called by loadVideos(), where the first item matching the selected behavior is set to get the survey starting video
 useEffect(() => {
   if (items.length > 0 && !startedSurvey.current) {
     var i=0;
@@ -225,6 +221,13 @@ useEffect(() => {
     startSurvey(items[i]);
   }
 }, [items]);
+
+// loads the videos that will be used for the survey and sets the timer
+useEffect(() => {
+  loadVideos();
+  startTimeRef.current = performance.now();
+  setStart(performance.now());
+}, [initSurvey]);
 
   function startSurvey(video) {
         /* order each video based on complexity for a selected behavior category */
@@ -509,25 +512,63 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          height: 'flex',
          display: 'flex',
          backgroundColor: "rgba(0,0,0,0.5)",
- 	 position: 'fixed', top:'0px', 
+ 	 position: 'fixed', top:'0px', left: '0px', 
       }}>
          <Box 
             component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',}}
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '15px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: '15px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
       </Box>
         <MainHeader fadeAnimation={titleFloat} />
-        <Button sx={{ margin: '48px 0 0', fontFamily: "'DM Mono', monospace", fontWeight: 300, fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' }, }} variant="contained" onClick={() => {
+        <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column',}}>
+            <Typography sx={{fontFamily: "'Cormorant Garamond', Georgia, serif"}}>
+                You will be presented with a series of video pairs. Please select from each video the one you consider more complex.
+            </Typography>
+        </Box>
+        <Button sx={{ margin: '48px 0 0', backgroundColor: "#FFF", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' }, }} variant="contained" onClick={() => {
+           // goes to the next screen for getting user demographics
            setStartInstructions(false);
-           setInitSurvey(true);
+           setDemographics(true);
            setTitleFloat(true);
-        }}> <strong>Start</strong> </Button>
+        }}>
+             <Typography sx={{ fontSize: 20, fontFamily: "'Cormorant Garamond', Georgia, serif"}}> <strong>Start</strong> </Typography>
+        </Button>
       </div>
     );
   }
-
+  if (demographics) {
+    return (
+      <div style={{ justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
+      <Box sx={{
+         width: '100%',
+         height: 'flex',
+         display: 'flex',
+         backgroundColor: "rgba(0,0,0,0.5)",
+ 	 position: 'fixed', top:'0px', left: '0px', 
+      }}>
+         <Box 
+            component="img"
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
+            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
+         />
+         <Typography sx={{ margin: '15px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
+      </Box>
+      <Box sx={{borderRadius: '10px', display: 'flex', flexDirection: 'column',  width: '50%', height: '80%', border: '2px solid #001000', margin: '10% 0 0 0', }}>
+        <DemographicsForm/>
+        <Button sx={{ margin: '48px 0 0', backgroundColor: "#FFF", fontWeight: 300, fontSize: '15px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' }, }} variant="contained" onClick={() => {
+           // goes to the next screen for getting user demographics
+           setDemographics(false);
+           setInitSurvey(true);
+           setTitleFloat(true);
+        }}>
+                 <Typography sx={{ fontSize: 20, fontFamily: "'Cormorant Garamond', Georgia, serif"}}> <strong>Submit</strong> </Typography>
+        </Button>
+      </Box>   
+      </div>
+    );
+  }
   if (loading) return <div style={{ padding: 20 }}>Loading videos…</div>;
   if (ended) {
     rankedVideos = {};
@@ -558,13 +599,13 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       }}>
          <Box 
             component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',}}
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '12px 0 12px 10px', fontFamily: "'DM Mono', monospace", fontWeight: 300, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#9a9690', borderLeft: '1px solid rgba(26,25,23,0.15)', paddingLeft: '10px', }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: '12px 0 12px 10px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFFFFF', borderLeft: '1px solid rgba(26,25,23,0.15)', paddingLeft: '10px', }}> Exalabs UMass Lowell </Typography>
       </Box>
         <Box sx={{ justifyContent: 'center', alignItems: 'center', position: 'relative', opacity: titleFloat ? 1 : 0, transform: titleFloat ? "translateY(0)" : "translateY(-50px)", transition: "opacity 1s ease-out, transform 1s ease-out", }}>
-           <Typography sx={{fontWeight: 'bold', fontSize: '50px', fontType: 'Helvetica', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#000',}}>Survey complete</Typography>
+           <Typography sx={{fontWeight: 'bold', fontSize: '50px', fontFamily: "'Cormorant Garamond', Georgia, serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#000',}}>Survey complete</Typography>
         </Box>
         <EmailBox xpos='0%' ypos='20%'/>
         <Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#000', border: '1px solid #000', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)', color: '#FFF', border: '1px solid #000',}, fontSize: '25px', }} onClick={restart}>Restart</Button>
@@ -585,10 +626,10 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       }}>
          <Box 
             component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',}}
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '10px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: '10px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
       </Box>
         <h2>Not enough videos to compare</h2>
         <Button sx= {{ gap: '150px', margin: '100px 0'}}  onClick={restart}>Reload</Button>
@@ -611,14 +652,14 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       }}>
          <Box 
             component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', position: 'fixed',top:'0px',}}
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', position: 'fixed',top:'0px',left:'0px',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '13px', fontWeight: 'bold', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: '13px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '20px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
       </Box>   
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', color: '#000' }}>
-        <span style={{ fontFamily: '"Playfair Display", serif' }}>Click the video you think is{' '}</span>&nbsp;
-        <span style={{ fontFamily: '"Playfair Display", serif' }}><strong>more complex</strong></span>&nbsp;
+        <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>Click the video you think is{' '}</span>&nbsp;
+        <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}><strong>more complex</strong></span>&nbsp;
       </Box>
       
       <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
@@ -627,9 +668,9 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       </div>
       <div style={{ padding: '20px 24px 32px', maxWidth: '900px', margin: '0 auto', width: '100%'}}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: 'center',  marginBottom: '10px',}}>
-           <Typography sx={{fontSize: 22,}}>PROGRESS</Typography>
+           <Typography sx={{fontSize: 22, fontFamily: "'Cormorant Garamond', Georgia, serif"}}>PROGRESS</Typography>
 	   <div style={{ display: "flex", alignItems: 'center', gap: '10px',}}>
-              <Typography sx={{fontSize: 30, fontWeight: 'bold',}}>{vidnum - 1}</Typography>/<Typography sx={{fontSize: 22,}}>{numVideos+1} pairs complete</Typography>
+              <Typography sx={{fontSize: 30, fontWeight: 'bold', fontFamily: "'Cormorant Garamond', Georgia, serif"}}>{vidnum - 1}</Typography>/<Typography sx={{fontSize: 22, fontFamily: "'Cormorant Garamond', Georgia, serif"}}>{numVideos+1} pairs complete</Typography>
            </div>
         </div>
         <div style={{ display: "flex", justifyContent: "center", }} >
@@ -710,7 +751,7 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
       onKeyDown={(e) => { if (e.key === "Enter") onChoose(); }}
     >
       <div style={{ marginBottom: '8px', fontFamily: "'DM Mono', monospace", fontWeight: 300, color: '#000', letterSpacing: '0.2em' }}>
-        {item.name || item.id}
+        
       </div>
       {item.url && (
         <div style={{ lineHeight: 0, borderRadius: '2px', overflow: 'hidden', aspectRatio: '1', }}>
@@ -1122,17 +1163,24 @@ const getFile = () => {
 
       let [date, params] = parseParams(url);
       console.log("params: "+params);
-
+ 
+      // parameter values for each video
       //const paramValues = Object.entries(params).map(p => params[p] !== undefined ? params[p] : 'N/A');
       let paramValues = [];
       params.forEach(p => { 
           //console.log("param: "+p);
           paramValues.push(p.split(":")[1]);
       });
+
+      let demoColumns = ["", "", "", ""];
+      if (index === 0) demoColumns = [];
+      if (index === 0) demoColumns = ["", "year", demographicsData["year"]];
+
       return [
         index+1, // Current Rank
         name, 
-        ...paramValues
+        ...paramValues, 
+        ...demoColumns
       ].join(',');
 
     });
@@ -1144,12 +1192,14 @@ const getFile = () => {
       "max alignment turn",
       "max coherence turn",
       "max separation turn",
-      "population"
+      "population",
+      "",
+      "age", demographicsData["age"], 
     ];
     console.log("csvrows: "+csvRows);
     const content = [
       headers.join(','),
-      ...csvRows
+      ...csvRows,
     ];  //.join('\n');
 
     // b) Mapping the video selections to the CSV rows
@@ -1191,7 +1241,7 @@ const getFile = () => {
 
 
     const new_content = [
-      'Ranked videos',
+      'Ranked videos, , , , , , , , ,Demographics',
       ...content,
       '',
       '',
@@ -1224,37 +1274,7 @@ const downloadOrderAsCSV = () => {
 };
 
 
-/*function EmailBox({ xpos, ypos}) {
-
-      // Download CSV results
-    return (
-      <Box sx={{ 
-         position: 'relative',
-         display: 'inline-block', 
-         flexDirection: 'column',
-         top: '20%',
-         left: '0%',
-      }}>
-        <Button sx={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            margin: '5px',
-            //border: '5px solid #8095FF',
-            borderRadius: '5px',
-            backgroundColor: 'rgba(128, 207, 255, 0.5)', 
-            padding: '20px', 
-            color: '#0022CC',
-            '&:hover': {
-                backgroundColor: 'rgba(246, 250, 255, 0.9)',
-                color: '#4DA6FF',
-            },
-        }} onClick={ () => renderEmail() }>
-            <Typography sx={{ fontWeight: 'bold', fontSize: '30px', transition: 'color 0.2s ease', margin: '5px 20px',}} color="inherit">Submit</Typography>
-        </Button>
-      </Box>
-    );
-}*/
+// button to email results
 function EmailBox({ xpos, ypos }) {
   const [open, setOpen] = React.useState(false);
 
@@ -1301,7 +1321,7 @@ function EmailBox({ xpos, ypos }) {
     throw new Error(text);
   }
 
-  alert("Submission complete!");
+  alert("Submission complete!"); // once the authentication and drive connection works
 })
     .catch((err) => {
       console.error(err);
@@ -1344,7 +1364,7 @@ function EmailBox({ xpos, ypos }) {
   );
 }
 
-
+// sending the email to the receiver (my email)
 const sendEmail = () => {  
     let [resultsFile, resultsContent] = getFile();
     console.log(resultsContent);
@@ -1370,6 +1390,8 @@ console.log("Sending "+resultsFile);
   console.error('Failed to send email.', err);
 });*/
 
+
+// fetch the request to the render backend service for the survey
 fetch('https://swarm-backend-ga0y.onrender.com/send-email', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -1389,6 +1411,7 @@ fetch('https://swarm-backend-ga0y.onrender.com/send-email', {
 
 };
 
+// drafts the email with the survey results file and attaches to the POST request to be sent to the Render backend
 function renderEmail() {
   let [resultsFile, resultsContent] = getFile();
   const file = new File([resultsContent], resultsFile, { type: "text/csv" });
@@ -1403,7 +1426,7 @@ function renderEmail() {
     method: "POST",
     body: formData
   })
-.then(async (res) => {
+.then(async (res) => { // waits for response to from the Render service, then notifies submission success
   const text = await res.text();
   console.log("Server response:", text);
 
@@ -1420,7 +1443,48 @@ function renderEmail() {
 
 }
 
+/* DEMOGRAPHICS */
+function DemographicsForm({}) {
+    const [age, setAge] = useState("");
+    const [schoolyear, setSchoolyear] = useState("");
+    const ages = ["18 - 22 years", "23 - 27 years", "28 - 32 years",  "33 - 37 years", "38 - 42 years", "43 - 47 years"];
+    const schoolyears = ["Freshman", "Sophomore", "Junior", "Senior", "Graduate/Master's", "Ph.D/Doctorate"];
+    return (
+       <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'left', marginLeft: '5%', }}>
+           <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
+               <Typography sx={{  }}> Please select which age range applies to you: </Typography>
+                   <Select value={age} onChange={(e) => {
+                          setAge(e.target.value);
+                          demographicsData["age"] = e.target.value; 
+                          console.log("demographics data: ", demographicsData["age"]);
+                       }} displayEmpty>
+                       {ages.map((a) => (
+                           <MenuItem key={a} value={a}>
+                                {a}
+                           </MenuItem>
+                       ))}
+                   </Select>
+           </Box>
+           <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
+               <Typography sx={{  }}> Please select what year of university you are in: </Typography>
+                   <Select value={schoolyear} onChange={(e) => {
+                          setSchoolyear(e.target.value);
+                          demographicsData["year"] = e.target.value; 
+                          console.log("demographics data: ", demographicsData["year"]);
+                       }} displayEmpty>
+                       {schoolyears.map((s) => (
+                           <MenuItem  key={s} value={s}>
+                                {s}
+                           </MenuItem>
+                       ))}
+                   </Select>
+           </Box>
+       </Box>
+    );
+}
 
+/* STYLING FEATURES */
+// Main header for the swarm survey
 function MainHeader({ fadeAnimation }) {
   return (
     <Box sx={{    
