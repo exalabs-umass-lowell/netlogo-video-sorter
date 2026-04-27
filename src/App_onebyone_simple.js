@@ -756,7 +756,7 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
       {item.url && (
         <div style={{ lineHeight: 0, borderRadius: '2px', overflow: 'hidden', aspectRatio: '1', }}>
           <img
-            src={process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "")}
+            src={process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "").replace(/\.gif$/i, ".gif")}
             style={{ width: "100%", height: "100%", objectFit: "cover", display: 'block' }}
           />
         </div>
