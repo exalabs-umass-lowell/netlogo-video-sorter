@@ -46,7 +46,9 @@ export default function VideoPairApp_simple() {
   // states
   const [startInstructions, setStartInstructions] = useState([]); // reading the opening instructions
   const [preSurvey, setPreSurvey] = useState([]); // reading the pre-survey instructions
-  const [initSurvey, setInitSurvey] = useState();
+  const [samplePair, setSamplePair] = useState(false); // display sample pair
+  const [selectedSample, setSelectedSample] = useState(false); // display sample pair
+  const [initSurvey, setInitSurvey] = useState(); // start the survey
   const startedSurvey = useRef(false); // determine when to start main survey
   const [items, setItems] = useState([]); // full list loaded from JSON
   const [loading, setLoading] = useState(true); // is the data loading
@@ -150,6 +152,7 @@ useEffect(() => {
   }
 
 
+// Calculate the probabilities of each video pair as per the Bradley-Terry Method
 const btProbability = (beta_i, beta_j) => {
   return Math.exp(beta_i) / (Math.exp(beta_i) + Math.exp(beta_j));
 };
@@ -502,7 +505,6 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
   function disp(time) {
     text += String(time) + ",";
   }
-  //        <InstructionBoard msgs={start_messages} />
 
   if (startInstructions) {
     return (
@@ -523,9 +525,15 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       </Box>
         <MainHeader fadeAnimation={titleFloat} />
         <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column',}}>
-            <Typography sx={{fontFamily: "'Cormorant Garamond', Georgia, serif"}}>
-                You will be presented with a series of video pairs. Please select from each video the one you consider more complex.
-            </Typography>
+            <Button sx={{ margin: '48px 0 0', backgroundColor: "#FFF", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' }, }} variant="contained" onClick={() => {
+                 // goes to the tutorial screen
+                 setStartInstructions(false);
+                 setPreSurvey(true);
+                 setTitleFloat(true);
+            }}>
+                 <Typography sx={{ fontSize: 20, fontFamily: "'Cormorant Garamond', Georgia, serif"}}> <strong>Instructions</strong> </Typography>
+            </Button>
+
         </Box>
         <Button sx={{ margin: '48px 0 0', backgroundColor: "#FFF", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' }, }} variant="contained" onClick={() => {
            // goes to the next screen for getting user demographics
@@ -535,6 +543,85 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
         }}>
              <Typography sx={{ fontSize: 20, fontFamily: "'Cormorant Garamond', Georgia, serif"}}> <strong>Start</strong> </Typography>
         </Button>
+      </div>
+    );
+  }
+  if (preSurvey) {
+    return (
+      <div style={{ justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
+      <Box sx={{
+         width: '100%',
+         height: 'flex',
+         display: 'flex',
+         backgroundColor: "rgba(0,0,0,0.5)",
+ 	 position: 'fixed', top:'0px', left: '0px', 
+      }}>
+         <Box 
+            component="img"
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
+            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
+         />
+         <Typography sx={{ margin: '15px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
+      </Box>
+      <InstructionBoard msgs={ presurvey_messages } nextLink={samplePair} setNextLink={setSamplePair} currLink={preSurvey} setCurrLink={setPreSurvey} />
+      </div>
+    );
+  }
+  if (samplePair) { // display a sample pair for the user to select from
+      return (
+          <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: '#f5f3ef', transition: 'background-color 0.5s ease', }}>
+    <div style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
+      <div>
+      <Box sx={{
+         width: '100%',
+         height: 'flex',
+         display: 'flex',
+         backgroundColor: "rgba(0,0,0,0.5)",
+         position: 'fixed',top:'0px',
+         zIndex: 100,
+         padding: '0 24px',
+      }}>
+         <Box 
+            component="img"
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', position: 'fixed',top:'0px',left:'0px',}}
+            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
+         />
+         <Typography sx={{ margin: '13px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '20px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
+      </Box>   
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', color: '#000' }}>
+        <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>Click the video you think is{' '}</span>&nbsp;
+        <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}><strong>more complex</strong></span>&nbsp;
+      </Box>
+      
+      <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
+        <VideoCard item={pair[0]} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="left" fadeAnimation={visible} />
+        <VideoCard item={pair[1]} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="right" fadeAnimation={visible} />
+      </div> 
+
+      </div>
+      
+    </div>
+    </div>
+    );
+  }
+  if (selectedSample) {
+    return (
+      <div style={{ justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
+      <Box sx={{
+         width: '100%',
+         height: 'flex',
+         display: 'flex',
+         backgroundColor: "rgba(0,0,0,0.5)",
+ 	 position: 'fixed', top:'0px', left: '0px', 
+      }}>
+         <Box 
+            component="img"
+            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
+            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
+         />
+         <Typography sx={{ margin: '15px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
+      </Box>
+      <InstructionBoard msgs={ final_message } nextLink={demographics} setNextLink={setDemographics} currLink={selectedSample} setCurrLink={setSelectedSample} />
       </div>
     );
   }
@@ -922,11 +1009,10 @@ function startBoard({ children }) {
 
 const start_messages = [{ type: "instruction", textBefore: "Hello!\nWelcome to the swarm complexity ranking survey!\nClick ", bold: "Next Page", textAfter: " to start the survey."}];
 const presurvey_messages = ["You will be presented with a series of videos that you will be asked to rank according to complexity.",
- 		"Complexity is defined as the inconsistency of the swarm behavior displayed on the screen.",
 		"A series of pairs of videos will be displayed, where one video is more complex than the other. Your task is to select which you think is the most complex.",
-		"Once you have selected then you can click submit.",
-		"If you are unsure of one or more of your choices, you will be allowed to go back to that pair of videos and re-evaluate.",
-		"Click the start button to begin the survey once you have read and understood these instructions. Have fun!"];
+                "We will show you a sample pair now."];
+
+const final_message = ["Click the start button to begin the survey once you have read and understood these instructions. Have fun!"];
 
 
 function InstructionCard({ psg }) {
@@ -966,7 +1052,7 @@ function InstructionCard({ psg }) {
    }
 } 
 
-function InstructionBoard({ msgs }) {
+function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink }) {
    const [currentInstruction, setCurrentInstruction] = useState(0);
    const next = () => {
       setCurrentInstruction(curr => (curr + 1));
@@ -976,23 +1062,21 @@ function InstructionBoard({ msgs }) {
    };
    return (
       <div style={{ width: '1000px',
-                   border: '5px solid #3399FF',
-                   borderRadius: '10px',
-                   borderColor: '#3399FF',
+                   borderRadius: '50px',
                    padding: '16px 20px',
                    lineHeight: '1.5',
-                   background: 'radial-gradient(circle,#80D4FF,#19B2FF,#3399FF)',
+                   background: '#FFF',
                    display: 'flex',
                    flexDirection: 'column', 
                    gap: '100px', 
-                   marginTop: '30px',
+                   marginTop: '10%',
                    textAlign: 'center',
                    alignItems: 'center', 
                    justifyContent: 'center', }}>
          <Typography 
            variant="h4"
            sx={{
-             fontFamily: `'Orbitron', 'Roboto Mono', 'JetBrains Mono', monospace`,
+             fontFamily: "'Cormorant Garamond', Georgia, serif",
              fontWeight: 600,
              letterSpacing: '0.18em',
              textTransform: 'uppercase',
@@ -1009,7 +1093,16 @@ function InstructionBoard({ msgs }) {
            <Typography sx={{ gap: '20px', fontWeight: 'bold', fontFamily: `'Orbitron', 'Roboto Mono', 'JetBrains Mono', monospace`, }}>
               {(currentInstruction+1)}/{msgs.length}
            </Typography>
-           {currentInstruction < msgs.length - 1 && (<Button onClick={next} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF'} }} >Next</Button>)}
+           {currentInstruction < msgs.length - 1 && (
+		<Button onClick={next} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF'} }} >
+		   Next
+	        </Button>)
+	   }
+           {currentInstruction >= msgs.length - 1 && !nextLink && (
+		<Button onClick={() => {setNextLink(true); console.log("next link is ", nextLink); setCurrLink(false);}} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF'} }} >
+		   Next
+	        </Button>)
+	   }
          </div>
       </div>
    );
