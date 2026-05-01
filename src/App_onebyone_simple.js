@@ -1625,7 +1625,7 @@ function MainHeader({ fadeAnimation }) {
       transform: fadeAnimation ? "translateY(0)" : "translateY(-50px)",
       transition: "opacity 1s ease-out, transform 1s ease-out",
     }}>
-      <Typography sx={{fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 'bold', fontSize: '70px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', padding: '20px', color: '#000', }}>
+      <Typography sx={{fontFamily: "'Arial', Georgia, serif", fontWeight: 'bold', fontSize: '70px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', padding: '20px', color: '#000', }}>
         Welcome to the swarm complexity ranking survey!
       </Typography>
     </Box>
