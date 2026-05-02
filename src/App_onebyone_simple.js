@@ -563,7 +563,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          />
          <Typography sx={{ margin: '15px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
       </Box>
-      <InstructionBoard msgs={ presurvey_messages } nextLink={samplePair} setNextLink={setSamplePair} currLink={preSurvey} setCurrLink={setPreSurvey} />
+      <InstructionBoard msgs={ presurvey_messages } nextLink={samplePair} setNextLink={setSamplePair} currLink={preSurvey} setCurrLink={setPreSurvey} nextText={"next"} textSize={"25px"}/>
       </div>
     );
   }
@@ -621,7 +621,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          />
          <Typography sx={{ margin: '15px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
       </Box>
-      <InstructionBoard msgs={ final_message } nextLink={demographics} setNextLink={setDemographics} currLink={selectedSample} setCurrLink={setSelectedSample} />
+      <InstructionBoard msgs={ final_message } nextLink={demographics} setNextLink={setDemographics} currLink={selectedSample} setCurrLink={setSelectedSample} nextText={"start"} textSize={"25px"} />
       </div>
     );
   }
@@ -1007,26 +1007,35 @@ function startBoard({ children }) {
 // startBoard <-- instructionCard <-- presurvey_messages
 // instructionboard <-- instructionCard <-- presurvey_messages
 
-const start_messages = [{ type: "instruction", textBefore: "Hello!\nWelcome to the swarm complexity ranking survey!\nClick ", bold: "Next Page", textAfter: " to start the survey."}];
-const presurvey_messages = ["You will be presented with a series of videos that you will be asked to rank according to complexity.",
+const start_messages = [{ type: "instruction", textBefore: `Hello!\nWelcome to the swarm complexity ranking survey!\nClick `, bold: "Next Page", textAfter: " to start the survey."}];
+const presurvey_messages = [{type: "instruction", textBefore: "", bold: `GOAL OF THE STUDY:\n\n`, textAfter: `This survey aims to determine the relative complexity of swarms based on which videos you select as more complex in a series of pairwise comparisons.\n`}, "You will be presented with a series of videos that you will be asked to rank according to complexity.",
 		"A series of pairs of videos will be displayed, where one video is more complex than the other. Your task is to select which you think is the most complex.",
                 "We will show you a sample pair now."];
 
-const final_message = ["Click the start button to begin the survey once you have read and understood these instructions. Have fun!"];
+const final_message = [{ type: "instruction", textBefore: "Click the ", bold: "START", textAfter: ` button to begin the survey once you have read and understood these instructions.\n\n Have fun!`}];
 
 
-function InstructionCard({ psg }) {
+function InstructionCard({ psg, textSize }) {
+
+   const newlinerender = (text) => 
+      text.split('\n').map((line, i, arr) => (
+          <span key={i}>
+              {line}
+              {i < arr.length - 1 && <br />}
+          </span>
+      ));
    if (typeof psg === "string") {
       return (
          <div style={{ 
-           width: '500px', 
+           width: '400px', 
            height: 'flex', 
            borderRadius: '10px', 
-           margin: '20px', 
            borderColor: '#3399FF', 
            backgroundColor: 'white', 
            color: '#003366', 
            padding: '150px 20px',
+	   whiteSpace: 'pre-wrap',
+           fontSize: textSize
          }}>
            {psg}
          </div>
@@ -1043,16 +1052,17 @@ function InstructionCard({ psg }) {
             backgroundColor: 'white', 
             color: '#003366', 
             padding: '150px 20px',
+            fontSize: textSize
          }}>
-            {psg.textBefore}
-            <strong>{psg.bold}</strong>
-            {psg.textAfter}
+            {newlinerender(psg.textBefore)}
+            <strong>{newlinerender(psg.bold)}</strong>
+            {newlinerender(psg.textAfter)}
          </div>
       );
    }
 } 
 
-function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink }) {
+function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink, nextText, textSize }) {
    const [currentInstruction, setCurrentInstruction] = useState(0);
    const next = () => {
       setCurrentInstruction(curr => (curr + 1));
@@ -1068,8 +1078,8 @@ function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink }
                    background: '#FFF',
                    display: 'flex',
                    flexDirection: 'column', 
-                   gap: '100px', 
-                   marginTop: '10%',
+                   gap: '20px', 
+                   marginTop: '5%',
                    textAlign: 'center',
                    alignItems: 'center', 
                    justifyContent: 'center', }}>
@@ -1086,21 +1096,25 @@ function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink }
              Instructions 
          </Typography>
          <Fade in timeout={300} key={currentInstruction}>
-         <p>< InstructionCard psg={msgs[currentInstruction]} /></p>
+         <p>< InstructionCard psg={msgs[currentInstruction]} textSize={textSize} /></p>
          </Fade>
          <div>
-           {currentInstruction > 0 && (<Button onClick={prev} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF'} }} >Previous</Button>)}
+           {currentInstruction > 0 && 
+               (<Button onClick={prev} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF', textSize: textSize} }} >
+		   <Typography sx={{ textSize: textSize}}>Previous</Typography>
+                </Button>)
+           }
            <Typography sx={{ gap: '20px', fontWeight: 'bold', fontFamily: `'Orbitron', 'Roboto Mono', 'JetBrains Mono', monospace`, }}>
               {(currentInstruction+1)}/{msgs.length}
            </Typography>
            {currentInstruction < msgs.length - 1 && (
 		<Button onClick={next} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF'} }} >
-		   Next
+		   <Typography sx={{ textSize: textSize}}>Next</Typography>
 	        </Button>)
 	   }
            {currentInstruction >= msgs.length - 1 && !nextLink && (
 		<Button onClick={() => {setNextLink(true); console.log("next link is ", nextLink); setCurrLink(false);}} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF'} }} >
-		   Next
+		   <Typography sx={{ textSize: textSize}}>{nextText}</Typography>
 	        </Button>)
 	   }
          </div>
