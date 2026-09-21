@@ -90,7 +90,7 @@ export default function VideoPairApp_simple() {
   const [titleFloat, setTitleFloat] = useState(false); // for floating animation for a header
   const [betas, setBetas] = useState({}); // bradley-terry probabilities of the next videos being selected
   const [numVideos, setNumVideos] = useState(0);
-  const specificBehavior = "linear";
+  const specificBehavior = "maxalignturn-mod";
 
 const getIP = async() => {
   try {
