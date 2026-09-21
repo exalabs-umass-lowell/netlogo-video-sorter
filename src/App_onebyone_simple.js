@@ -18,6 +18,7 @@ import {   Button,
   Fade,
   Menu, MenuProps, MenuItem,
   Select, SelectChangeEvent } from '@mui/material';
+import Multiselect from 'multiselect-react-dropdown';
 import { AnimatedBackground, useAnimationControls } from 'animated-backgrounds';
 import { styled } from '@mui/system';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -26,7 +27,7 @@ import { keyframes } from "@mui/system";
 import axios from "axios";
 
 // VideoPairApp.jsx
-let demographicsData = {"age": 0, "degree": "", "country": "", "languages": "", "profession": ""};
+let demographicsData = {"age": 0, "highestDegree": "", "country": "", "hobbies": "", "profession": ""};
 let rankedVideos = {};
 let selectionTimes = {};
 let notSelectionTimes = {};
@@ -78,6 +79,7 @@ export default function VideoPairApp_simple() {
   const [results, setResults] = useState([]); // recorded choices: {left, right, chosenId}
   const [ended, setEnded] = useState(false); // has the survey been completed?
   const [start, setStart] = useState(() => performance.now()); // is the survey starting?
+  const [reloadKey, setReloadKey] = useState(0); // reloading video reference
   const [choiceTime, setChoiceTime] = useState(0); // what is the start time?
   const [times, setTimes] = useState([]); // array for the times taken by each user
   const [vidnum, setVidnum] = useState(1); // increment number of videos seen
@@ -201,22 +203,21 @@ useEffect(() => {
         const sheet = workbook.worksheets[0]; // get first sheet
 
         // get countries
-        const datacountries = sheet.getColumn('A').values.slice(1); // array of rows
+        const datacountries = sheet.getColumn('A').values.slice(2); // array of rows
         const countryList = datacountries.flat().filter(Boolean);             // flatten to 1D list
         setCountries(countryList);
 
-        // get languages
-        const datalanguages = sheet.getColumn('B').values.slice(1); // array of rows
-        const languagesList = datalanguages.flat().filter(Boolean);             // flatten to 1D list
+        // get hobbies
+        const datahobbies = sheet.getColumn('B').values.slice(2); // array of rows
+        const hobbiesList = datahobbies.flat().filter(Boolean);             // flatten to 1D list
         setLanguages(languagesList);
 
         // get professions
-        const dataprofessions = sheet.getColumn('C').values.slice(1); // array of rows
+        const dataprofessions = sheet.getColumn('C').values.slice(2); // array of rows
         const professionsList = dataprofessions.flat().filter(Boolean);             // flatten to 1D list
         setProfessions(professionsList);
      };
      loadExcel();
-     console.log(countries);
   }, [demographics]);
   
   // fetch videos from list based on behavior
@@ -335,7 +336,7 @@ useEffect(() => {
        if (demographicsData["age"] == 0 || demographicsData["age"] == "Age") recentErrors.age = "Please select an age range.";
        if (demographicsData["highestDegree"] == "" || demographicsData["highestDegree"] == "Degree") recentErrors.highestDegree = "Please select from the dropdown the highest degree you have attained.";
        if (demographicsData["country"] == "" || demographicsData["country"] == "Country") recentErrors.country = "Please select your country from the dropdown.";
-       if (demographicsData["language"] == "" || demographicsData["language"] == "Language") recentErrors.language = "Please enter any languages you know from the dropdown.";
+       if (demographicsData["hobbies"] == "" || demographicsData["hobbies"] == "Enter hobbies") recentErrors.hobbies = "Please enter any hobbies you have.";
        if (demographicsData["profession"] == "" || demographicsData["profession"] == "Professions") recentErrors.profession = "Please enter your current profession from the dropdown.";
        console.log(demographicsData);
        console.log(recentErrors);
@@ -586,7 +587,11 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
     }
     setResults([]);
     setRankings([]);
-    
+    setVidnum(1);
+    setPairs(p => p.slice(1));
+    rankedVideos = {};
+    selectionTimes = {};
+    notSelectionTimes = {};
     setInitSurvey(true);
 
     if (numVideos == 0 && sorted.length > 0) {
@@ -720,8 +725,8 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       </Box>
       
       <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
-        <VideoCard item={pair[0]} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="left" fadeAnimation={visible} />
-        <VideoCard item={pair[1]} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="right" fadeAnimation={visible} />
+        <VideoCard item={pair[0]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="left" fadeAnimation={visible} />
+        <VideoCard item={pair[1]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="right" fadeAnimation={visible} />
       </div> 
 
       </div>
@@ -824,7 +829,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
 		Survey complete
 	   </Typography>
            <Typography sx={{fontWeight: '', fontSize: '35px', fontFamily: "'Cormorant Garamond', Georgia, serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
-		Thank you for participating in this study conducted by Exalabs!
+		
 	   </Typography>
         </Box>
 
@@ -894,8 +899,8 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
       </Box>
       
       <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
-        <VideoCard item={pair[0]} onChoose={() => onChoose("left")} position="left" fadeAnimation={visible} />
-        <VideoCard item={pair[1]} onChoose={() => onChoose("right")} position="right" fadeAnimation={visible} />
+        <VideoCard item={pair[0]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => onChoose("left")} position="left" fadeAnimation={visible} />
+        <VideoCard item={pair[1]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => onChoose("right")} position="right" fadeAnimation={visible} />
       </div>
       <div style={{ padding: '20px 24px 32px', maxWidth: '900px', margin: '0 auto', width: '100%'}}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: 'center',  marginBottom: '10px',}}>
@@ -957,7 +962,32 @@ function ProgressBar({ number, total }) {
     );
 }
 
-function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
+function VideoCard({ item, onChoose, position = "left", fadeAnimation, reloadKey, setReloadKey }) {
+  const observerRef = useRef();
+ 
+useEffect(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      // When the element enters the viewport, update the key
+      if (entries[0].isIntersecting) {
+        setReloadKey(Date.now());
+      }
+    },
+    { threshold: 0.1 } // Triggers when 10% of the element is visible
+  );
+
+  const currentElement = observerRef.current;
+  if (currentElement) {
+    observer.observe(currentElement);
+  }
+
+  return () => {
+    if (currentElement) {
+      observer.unobserve(currentElement);
+    }
+  };
+}, []);
+
   if (!item) return null;
   return (
     <Box
@@ -985,9 +1015,9 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
         
       </div>
       {item.url && (
-        <div style={{ lineHeight: 0, borderRadius: '2px', overflow: 'hidden', aspectRatio: '1', }}>
+        <div ref={observerRef} style={{ lineHeight: 0, borderRadius: '2px', overflow: 'hidden', aspectRatio: '1', }}>
           <img
-            src={process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "").replace(/\.gif$/i, ".gif")}
+            src={`${process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "").replace(/\.gif$/i, ".gif")}?cb=${reloadKey}`}
             style={{ width: "100%", height: "100%", objectFit: "cover", display: 'block' }}
           />
         </div>
@@ -1395,7 +1425,7 @@ const parseParams = (filename) => {
             params.push(`${paramtype}:${parseFloat(paramval)}`);
         }
     });
-    //console.log("in function: "+params);
+    console.log("in function: "+params);
     return [date, params];
 }
 
@@ -1430,9 +1460,9 @@ const getFile = (userIP) => {
       });
 
       let demoColumns = ["", "", "", "", ""];
-      if (index === 0) demoColumns = ["", "Level of Education", demographicsData["degree"]];
+      if (index === 0) demoColumns = ["", "Level of Education", demographicsData["highestDegree"]];
       if (index === 1) demoColumns = ["", "Country", demographicsData["country"]];
-      if (index === 2) demoColumns = ["", "Spoken Languages", demographicsData["language"]];
+      if (index === 2) demoColumns = ["", "Hobbies", demographicsData["hobbies"]];
       if (index === 3) demoColumns = ["", "Profession", demographicsData["profession"]];
       
       return [
@@ -1710,18 +1740,29 @@ function DemographicsForm({ errors, countries, languages, professions }) {
     const [age, setAge] = useState("");
     const [highestDegree, setHighestDegree] = useState("");
     const [country, setCountry] = useState("");
-    const [language, setLanguage] = useState("");
+    const [hobbies, setHobbies] = useState("");
     const [profession, setProfession] = useState("");
     const ages = ["18 - 22 years", "23 - 27 years", "28 - 32 years",  "33 - 37 years", "38 - 42 years", "43 - 47 years"];
     const degrees = ["High School Diploma", "Bachelor's", "Graduate/Master's", "Ph.D/Doctorate"];
    
-    const handleChanged = (value) => {
-       setLanguage((prev) => {
-          const updated = prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value];
-          demographicsData["language"] = updated.join(",");
-          console.log(demographicsData["language"]);
-          return updated;
-       });
+    const handleHobbiesChange = (e) => {
+       setHobbies(e.target.value);
+       demographicsData["hobbies"] = e.target.value;
+       console.log("New hobbies: "+demographicsData["hobbies"]);
+    };
+
+    const handleProfessionChange = (selectedList) => {
+       setProfession(selectedList);
+       demographicsData["profession"] = selectedList.join(",");
+       console.log("New profession: "+demographicsData["profession"]);
+    };
+
+    const handleProfessionSearch = (value) => {
+       setProfession(value);
+       if (!professions.includes(value) && value.trim() !== "") {
+          demographicsData["profession"] = value; 
+          console.log("New profession: "+demographicsData["profession"]);
+       }
     };
 
     return (
@@ -1769,24 +1810,50 @@ function DemographicsForm({ errors, countries, languages, professions }) {
                            </MenuItem>
                        ))}
                    </Select>
-                   {errors.highestDegree && <Typography color="error" variant="caption">{errors.country}</Typography>}
+                   {errors.country && <Typography color="error" variant="caption">{errors.country}</Typography>}
            </Box>
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
-               <Typography sx={{  }}> Are you multilingual? If so, enter your languages: </Typography>
-                   <Box sx={{maxHeight: 100, overflowY: 'auto', borderRadius: 1, border: '1px solid #D4D0CF'}}>
-                   <FormGroup >
-                       {languages.map((s) => (
-                           <FormControlLabel key={s} label={s} required displayEmpty control={
-                           <Checkbox  checked={language.includes(s)} onChange={() => handleChanged(s)} />
-                               
-                           } />
-                       ))}
-                   </FormGroup>
+               <Typography sx={{  }}> What are your hobbies? </Typography>
+                   <Box sx={{borderRadius: 1, border: '1px solid #D4D0CF'}}>
+
+                   <TextField
+                   sx={{ width: '100%', }}
+                   onChange={handleHobbiesChange} // Function will trigger on change event
+                   displayValue="Enter hobbies" // Property name to display in the dropdown options
+                   />                   
+                   
                    </Box>
-                   {errors.language && <Typography color="error" variant="caption">{errors.language}</Typography>}
+                   {errors.hobbies && <Typography color="error" variant="caption">{errors.hobbies}</Typography>}
            </Box>
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
                <Typography sx={{  }}> What best describes your profession? </Typography>
+                   <Box sx={{borderRadius: 1, border: '1px solid #D4D0CF'}}>
+
+                   <Multiselect
+                   options={professions} // Options to display in the dropdown
+                   singleSelect={false}
+                   isObject={false}
+                   selectedValues={profession} // Preselected value to persist in dropdown
+                   onSelect={handleProfessionChange} // Function will trigger on select event
+                   onRemove={handleProfessionChange} // Function will trigger on remove event
+                   onSearch={handleProfessionSearch}
+                   displayValue="Enter and select language" // Property name to display in the dropdown options
+                   onBlur={() => {
+                       if (professionInput && !professions.includes(professionInput)) {
+                       // Turn their raw string text into an array layout so chips render correctly
+                           setProfession([professionInput]); 
+                       }
+                   }}
+                   />                   
+                   
+                   </Box>
+                   {errors.profession && <Typography color="error" variant="caption">{errors.profession}</Typography>}
+           </Box>
+       </Box>
+    );
+}
+
+/*
                    <Select value={profession} required onChange={(e) => {
                           setProfession(e.target.value);
                           demographicsData["profession"] = e.target.value; 
@@ -1797,12 +1864,7 @@ function DemographicsForm({ errors, countries, languages, professions }) {
                                 {s}
                            </MenuItem>
                        ))}
-                   </Select>
-                   {errors.profession && <Typography color="error" variant="caption">{errors.profession}</Typography>}
-           </Box>
-       </Box>
-    );
-}
+                   </Select>*/
 
 /* STYLING FEATURES */
 // Main header for the swarm survey
