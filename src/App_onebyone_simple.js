@@ -210,7 +210,7 @@ useEffect(() => {
         // get hobbies
         const datahobbies = sheet.getColumn('B').values.slice(2); // array of rows
         const hobbiesList = datahobbies.flat().filter(Boolean);             // flatten to 1D list
-        setLanguages(languagesList);
+        setLanguages(hobbiesList);
 
         // get professions
         const dataprofessions = sheet.getColumn('C').values.slice(2); // array of rows
@@ -335,7 +335,7 @@ useEffect(() => {
        console.log(demographicsData);
        if (demographicsData["age"] == 0 || demographicsData["age"] == "Age") recentErrors.age = "Please select an age range.";
        if (demographicsData["highestDegree"] == "" || demographicsData["highestDegree"] == "Degree") recentErrors.highestDegree = "Please select from the dropdown the highest degree you have attained.";
-       if (demographicsData["country"] == "" || demographicsData["country"] == "Country") recentErrors.country = "Please select your country from the dropdown.";
+       if (demographicsData["numLanguages"] <= 0 || !Number.isInteger(Number(demographicsData["numLanguages"]))) recentErrors.numLanguages = "Entry must be a number greater than 0.";
        if (demographicsData["hobbies"] == "" || demographicsData["hobbies"] == "Enter hobbies") recentErrors.hobbies = "Please enter any hobbies you have.";
        if (demographicsData["profession"] == "" || demographicsData["profession"] == "Professions") recentErrors.profession = "Please enter your current profession from the dropdown.";
        console.log(demographicsData);
@@ -774,7 +774,7 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
          <Typography sx={{ margin: '15px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
       </Box>
       <Box sx={{borderRadius: '10px', display: 'flex', flexDirection: 'column',  width: '50%', height: '80%', border: '2px solid #001000', margin: '10% 0 0 0', }}>
-        <DemographicsForm errors={errors} countries={countries} languages={languages} professions={professions}/>
+        <DemographicsForm errors={errors} countries={countries} professions={professions}/>
         <Button sx={{ margin: '48px 0 0', backgroundColor: "#FFF", fontWeight: 300, fontSize: '15px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' }, }} variant="contained" onClick={() => {
            // goes to the next screen for getting user demographics
            if (validate()) {
@@ -1406,23 +1406,22 @@ function HelpBox({ headline, msg, xpos, ypos }) {
 
 
 const parseParams = (filename) => {
+    console.log("in parseparams");
     const params = [];
     const part_to_parse = filename.split("/").pop() || filename;  // get last part of filename
-    const is_gif = filename.includes(".gif"); // is file .gif?
-    let param_names = part_to_parse.split(".gif");
+    const is_gif = filename.includes(".GIF"); // is file .gif?
+    let param_names = part_to_parse.split(".GIF");
     param_names = param_names[0].split("_"); // get params and values
-    //console.log("param names are: ", param_names);
+    console.log("param names are: ", param_names);
     const date = param_names[0];
     const param_parts = param_names; // is_gif ? param_names.slice(1) : param_names; // split by parameters if the file is a gif
+    console.log(param_parts);
     param_parts.forEach((part) => {
-        /*const [paramtype, paramval] = part.split("~"); // split by type of parameter (ex. vision) and value
-        if (paramtype && paramval) {
-            params.push(paramtype + ":" + parseFloat(paramval)); // if there is a parameter type and value, then pair them
-        }*/
-        const match = part.match(/^([a-zA-Z]+)([0-9.]+)$/);
+        const match = part.match(/^([a-zA-Z]+)=([0-9.]+)$/);
         if (match) {
             const [, paramtype, paramval] = match;
             params.push(`${paramtype}:${parseFloat(paramval)}`);
+            console.log(`${paramtype}:${parseFloat(paramval)}`);
         }
     });
     console.log("in function: "+params);
@@ -1461,7 +1460,7 @@ const getFile = (userIP) => {
 
       let demoColumns = ["", "", "", "", ""];
       if (index === 0) demoColumns = ["", "Level of Education", demographicsData["highestDegree"]];
-      if (index === 1) demoColumns = ["", "Country", demographicsData["country"]];
+      if (index === 1) demoColumns = ["", "Number of Languages", demographicsData["numLanguages"]];
       if (index === 2) demoColumns = ["", "Hobbies", demographicsData["hobbies"]];
       if (index === 3) demoColumns = ["", "Profession", demographicsData["profession"]];
       
@@ -1724,7 +1723,7 @@ function renderEmail() {
   if (!res.ok) {
     throw new Error(text);
   }
-
+  // If fails, or dialog box says "Error sending email, not authenticated", enter in search bar https://swarm-backend-ga0y.onrender.com/auth
   alert("Submission complete!");
 })
     .catch((err) => {
@@ -1736,10 +1735,10 @@ function renderEmail() {
 
 
 /* DEMOGRAPHICS */
-function DemographicsForm({ errors, countries, languages, professions }) {
+function DemographicsForm({ errors, countries, professions }) {
     const [age, setAge] = useState("");
     const [highestDegree, setHighestDegree] = useState("");
-    const [country, setCountry] = useState("");
+    const [numLanguages, setNumLanguages] = useState("");
     const [hobbies, setHobbies] = useState("");
     const [profession, setProfession] = useState("");
     const ages = ["18 - 22 years", "23 - 27 years", "28 - 32 years",  "33 - 37 years", "38 - 42 years", "43 - 47 years"];
@@ -1749,6 +1748,12 @@ function DemographicsForm({ errors, countries, languages, professions }) {
        setHobbies(e.target.value);
        demographicsData["hobbies"] = e.target.value;
        console.log("New hobbies: "+demographicsData["hobbies"]);
+    };
+
+    const handleNumLanguagesChange = (e) => {
+       setNumLanguages(e.target.value);
+       demographicsData["numLanguages"] = e.target.value;
+       console.log("number of languages: "+demographicsData["numLanguages"]);
     };
 
     const handleProfessionChange = (selectedList) => {
@@ -1786,8 +1791,8 @@ function DemographicsForm({ errors, countries, languages, professions }) {
                <Typography sx={{  }}> Please select the highest certification you received: </Typography>
                    <Select value={highestDegree} required onChange={(e) => {
                           setHighestDegree(e.target.value);
-                          demographicsData["degree"] = e.target.value; 
-                          console.log("demographics data: ", demographicsData["degree"]);
+                          demographicsData["highestDegree"] = e.target.value; 
+                          console.log("demographics data: ", demographicsData["highestDegree"]);
                        }} displayEmpty>
                        {degrees.map((s) => (
                            <MenuItem  key={s} value={s}>
@@ -1798,19 +1803,17 @@ function DemographicsForm({ errors, countries, languages, professions }) {
                    {errors.highestDegree && <Typography color="error" variant="caption">{errors.highestDegree}</Typography>}
            </Box>
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
-               <Typography sx={{  }}> What country are you from? </Typography>
-                   <Select value={country} required onChange={(e) => {
-                          setCountry(e.target.value);
-                          demographicsData["country"] = e.target.value; 
-                          console.log("demographics data: ", demographicsData["country"]);
-                       }} displayEmpty>
-                       {countries.map((s) => (
-                           <MenuItem  key={s} value={s}>
-                                {s}
-                           </MenuItem>
-                       ))}
-                   </Select>
-                   {errors.country && <Typography color="error" variant="caption">{errors.country}</Typography>}
+               <Typography sx={{  }}> How many languages do you speak? </Typography>
+                   <Box sx={{borderRadius: 1, border: '1px solid #D4D0CF'}}>
+
+                   <TextField
+                   sx={{ width: '100%', }}
+                   onChange={handleNumLanguagesChange} // Function will trigger on change event
+                   displayValue="Enter number of languages spoken" // Property name to display in the dropdown options
+                   />            
+
+                   </Box>
+                   {errors.numLanguages && <Typography color="error" variant="caption">{errors.numLanguages}</Typography>}
            </Box>
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
                <Typography sx={{  }}> What are your hobbies? </Typography>
@@ -1837,7 +1840,7 @@ function DemographicsForm({ errors, countries, languages, professions }) {
                    onSelect={handleProfessionChange} // Function will trigger on select event
                    onRemove={handleProfessionChange} // Function will trigger on remove event
                    onSearch={handleProfessionSearch}
-                   displayValue="Enter and select language" // Property name to display in the dropdown options
+                   displayValue="Enter and select profession" // Property name to display in the dropdown options
                    onBlur={() => {
                        if (professionInput && !professions.includes(professionInput)) {
                        // Turn their raw string text into an array layout so chips render correctly
