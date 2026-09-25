@@ -7,6 +7,7 @@ import VideoPairApp_simple from './App_onebyone_simple';
 import { HashRouter } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 import "@fontsource/barlow/300.css";
 import "@fontsource/barlow/400.css";
 import "@fontsource/barlow/500.css";
@@ -25,6 +26,7 @@ root.render(
   <React.StrictMode>
   <HashRouter>
   <ThemeProvider theme={theme}>
+    <CssBaseline />
     <VideoPairApp_simple/>
   </ThemeProvider >
   </HashRouter>

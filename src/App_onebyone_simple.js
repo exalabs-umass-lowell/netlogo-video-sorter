@@ -537,175 +537,96 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
   }
   if (complete) {
     return (
-      <div style={{ justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`,backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
-         <Box sx={{
-           width: '100%',
-           height: 'flex',
-           display: 'flex',
-           backgroundColor: "rgba(0,0,0,0.5)",
-           position: 'fixed', top:'0px', left: '0px', 
-         }}>
-           <Box 
-              component="img"
-              sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
-              src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
-           />
-           <Box sx={{ justifyContent: 'flex-start', alignItems: 'center', }}>
-              <Typography sx={{  fontFamily: "'Barlow', Arial, sans-serif", fontSize: 25, }}>
-		You have already completed this survey as {' '} <strong>{userEmail}</strong> 
-              </Typography>
-           </Box>
-         </Box>
+      <div style={bgPageStyle}>
+        <SiteHeader />
+        <Typography sx={{ mt: { xs: 6, md: 12 }, px: 2, textAlign: 'center', fontSize: { xs: 20, sm: 25 }, overflowWrap: 'anywhere' }}>
+          You have already completed this survey as <strong>{userEmail}</strong>
+        </Typography>
       </div>
     );
   }
   if (startInstructions) {
     return (
-      <div style={{ justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`,backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
-      <Box sx={{
-         width: '100%',
-         height: 'flex',
-         display: 'flex',
-         backgroundColor: "rgba(0,0,0,0.5)",
- 	 position: 'fixed', top:'0px', left: '0px', 
-      }}>
-         <Box 
-            component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
-            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
-         />
-         <Typography sx={{ margin: '15px', fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
-      </Box>
+      <div style={bgPageStyle}>
+        <SiteHeader />
         <MainHeader />
-        <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column',}}>
-            <Button sx={{ margin: '48px 0 0', backgroundColor: "#FFF", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' }, }} variant="contained" onClick={() => {
-                 // goes to the tutorial screen
-                 setStartInstructions(false);
-                 setPreSurvey(true);
-            }}>
-                 <Typography sx={{ fontSize: 20, fontFamily: "'Barlow', Arial, sans-serif"}}> <strong>Instructions</strong> </Typography>
-            </Button>
-
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: { xs: 3, sm: 6 }, px: 2, pb: 4 }}>
+          <Button sx={primaryButtonSx} variant="contained" onClick={() => {
+            // goes to the tutorial screen
+            setStartInstructions(false);
+            setPreSurvey(true);
+          }}>
+            <Typography sx={{ fontSize: { xs: 17, sm: 20 } }}><strong>Instructions</strong></Typography>
+          </Button>
+          <Button sx={primaryButtonSx} variant="contained" onClick={() => {
+            // goes to the next screen for getting user demographics
+            console.log("clicked the start");
+            setStartInstructions(false);
+            setPreSurvey(false);
+            setDemographics(true);
+          }}>
+            <Typography sx={{ fontSize: { xs: 17, sm: 20 } }}><strong>Start</strong></Typography>
+          </Button>
         </Box>
-        <Button sx={{ margin: '48px 0 0', backgroundColor: "#FFF", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' }, }} variant="contained" onClick={() => {
-           // goes to the next screen for getting user demographics
-           console.log("clicked the start");
-           setStartInstructions(false);
-           setPreSurvey(false);
-           setDemographics(true);
-        }}>
-             <Typography sx={{ fontSize: 20, fontFamily: "'Barlow', Arial, sans-serif"}}> <strong>Start</strong> </Typography>
-        </Button>
       </div>
     );
   }
   if (preSurvey) {
     return (
-      <div style={{ justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`,backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
-      <Box sx={{
-         width: '100%',
-         height: 'flex',
-         display: 'flex',
-         backgroundColor: "rgba(0,0,0,0.5)",
- 	 position: 'fixed', top:'0px', left: '0px', 
-      }}>
-         <Box 
-            component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
-            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
-         />
-         <Typography sx={{ margin: '15px', fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
-      </Box>
-      <InstructionBoard msgs={ presurvey_messages } nextLink={samplePair} setNextLink={setSamplePair} currLink={preSurvey} setCurrLink={setPreSurvey} nextText={"next"} textSize={"25px"}/>
+      <div style={bgPageStyle}>
+        <SiteHeader />
+        <InstructionBoard msgs={ presurvey_messages } nextLink={samplePair} setNextLink={setSamplePair} currLink={preSurvey} setCurrLink={setPreSurvey} nextText={"next"} textSize={"25px"}/>
       </div>
     );
   }
   if (samplePair) { // display a sample pair for the user to select from
-      return (
-          <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: '#f5f3ef',}}>
-    <div style={{ fontFamily: "'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
-      <div>
-      <Box sx={{
-         width: '100%',
-         height: 'flex',
-         display: 'flex',
-         backgroundColor: "rgba(0,0,0,0.5)",
-         position: 'fixed',top:'0px',
-         zIndex: 100,
-         padding: '0 24px',
-      }}>
-         <Box 
-            component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', position: 'fixed',top:'0px',left:'0px',}}
-            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
-         />
-         <Typography sx={{ margin: '13px', fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '20px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
-      </Box>   
-      <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', margin: '0 auto', color: '#000' }}>
-        <span style={{ fontFamily: "'Barlow', Arial, sans-serif", fontSize: 25, }}>Click the video you think is{' '} <strong>more complex</strong></span>&nbsp;
-      </Box>
-      
-      <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
-        <VideoCard item={pair[0]} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="left" fadeAnimation={visible} />
-        <VideoCard item={pair[1]} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="right" fadeAnimation={visible} />
-      </div> 
-
+    const chooseSample = () => { setSelectedSample(true); setDemographics(false); setSamplePair(false); };
+    return (
+      <div style={surveyPageStyle}>
+        <SiteHeader />
+        <ChoicePrompt />
+        <Box sx={videoRowSx}>
+          <VideoCard item={pair[0]} onChoose={chooseSample} fadeAnimation={visible} />
+          <VideoCard item={pair[1]} onChoose={chooseSample} fadeAnimation={visible} />
+        </Box>
       </div>
-      
-    </div>
-    </div>
     );
   }
   if (selectedSample) {
     return (
-      <div style={{ justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`,backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
-      <Box sx={{
-         width: '100%',
-         height: 'flex',
-         display: 'flex',
-         backgroundColor: "rgba(0,0,0,0.5)",
- 	 position: 'fixed', top:'0px', left: '0px', 
-      }}>
-         <Box 
-            component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
-            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
-         />
-         <Typography sx={{ margin: '15px', fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
-      </Box>
-      <InstructionBoard msgs={ final_message } nextLink={demographics} setNextLink={setDemographics} currLink={selectedSample} setCurrLink={setSelectedSample} nextText={"start"} textSize={"25px"} />
+      <div style={bgPageStyle}>
+        <SiteHeader />
+        <InstructionBoard msgs={ final_message } nextLink={demographics} setNextLink={setDemographics} currLink={selectedSample} setCurrLink={setSelectedSample} nextText={"start"} textSize={"25px"} />
       </div>
     );
   }
   if (demographics) {
     return (
-      <div style={{ justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`,backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
-      <Box sx={{
-         width: '100%',
-         height: 'flex',
-         display: 'flex',
-         backgroundColor: "rgba(0,0,0,0.5)",
- 	 position: 'fixed', top:'0px', left: '0px', 
-      }}>
-         <Box 
-            component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
-            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
-         />
-         <Typography sx={{ margin: '15px', fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', position: 'fixed', top:'0px',  }}> Exalabs UMass Lowell </Typography>
-      </Box>
-      <Box sx={{borderRadius: '10px', display: 'flex', flexDirection: 'column',  width: '50%', height: '80%', border: '2px solid #001000', margin: '10% 0 0 0', }}>
-        <DemographicsForm errors={errors} countries={countries} languages={languages} professions={professions}/>
-        <Button sx={{ margin: '48px 0 0', backgroundColor: "#FFF", fontWeight: 300, fontSize: '15px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' }, }} variant="contained" onClick={() => {
-           // goes to the next screen for getting user demographics
-           if (validate()) {
+      <div style={bgPageStyle}>
+        <SiteHeader />
+        <Box sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: { xs: 'calc(100% - 32px)', sm: '80%', md: '50%' },
+          maxWidth: 700,
+          boxSizing: 'border-box',
+          border: '2px solid #001000',
+          borderRadius: '10px',
+          p: { xs: 2, sm: 3 },
+          mt: { xs: 3, md: '10vh' },
+          mb: 4,
+        }}>
+          <DemographicsForm errors={errors} countries={countries} languages={languages} professions={professions}/>
+          <Button sx={{ ...primaryButtonSx, fontWeight: 300, mt: { xs: 3, sm: 6 }, alignSelf: 'center' }} variant="contained" onClick={() => {
+            // goes to the next screen for getting user demographics
+            if (validate()) {
               setDemographics(false);
               setInitSurvey(true);
-           }
-        }}>
-                 <Typography sx={{ fontSize: 20, fontFamily: "'Barlow', Arial, sans-serif"}}> <strong>Submit</strong> </Typography>
-        </Button>
-      </Box>   
+            }
+          }}>
+            <Typography sx={{ fontSize: { xs: 17, sm: 20 } }}><strong>Submit</strong></Typography>
+          </Button>
+        </Box>
       </div>
     );
   }
@@ -725,118 +646,57 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
         notSelectionTimes[time] = notChosenVids[index];
         console.log("not selected "+notSelectionTimes[time]);
     });
-    
+
     return (
-      //background: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), radial-gradient(circle at center, rgba(0,0,204,0.6) 50%, rgba(179,217,255, 0.6) 100%), url('general-white-blue.jpg')`
-      <>
-      <div style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`,backgroundSize: '100% 100%, 100% 100%, contain', backgroundPosition: 'center, center, center', backgroundRepeat: 'no-repeat, no-repeat, no-repeat', backgroundBlendMode: 'multiply',}}>
-      <Box sx={{
-         width: '100%',
-         height: 'flex',
-         display: 'flex',
-         backgroundColor: "rgba(0,0,0,0.5)",
- 	 position: 'fixed', top:'0px', 
-      }}>
-         <Box 
-            component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
-            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
-         />
-         <Typography sx={{ margin: '12px 0 12px 10px', fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFFFFF', borderLeft: '1px solid rgba(26,25,23,0.15)', paddingLeft: '10px', }}> Exalabs UMass Lowell </Typography>
-      </Box>
-        <Box sx={{ justifyContent: 'center', alignItems: 'center', position: 'relative', }}>
-           <Typography sx={{fontWeight: 'bold', fontSize: '50px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#000',}}>
-		Survey complete
-	   </Typography>
-           <Typography sx={{fontWeight: '', fontSize: '35px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
-		Thank you for participating in this study conducted by Exalabs!
-	   </Typography>
+      <div style={{ ...bgPageStyle, justifyContent: 'center' }}>
+        <SiteHeader />
+        <Box sx={{ textAlign: 'center', px: 2, color: '#000' }}>
+          <Typography sx={{ fontWeight: 'bold', fontSize: { xs: 32, sm: 42, md: 50 }, m: { xs: '24px 0 12px', md: '50px' } }}>
+            Survey complete
+          </Typography>
+          <Typography sx={{ fontSize: { xs: 20, sm: 28, md: 35 }, m: { xs: '12px 0', md: '30px' } }}>
+            Thank you for participating in this study conducted by Exalabs!
+          </Typography>
         </Box>
 
-        <EmailBox xpos='0%' ypos='20%'/>
-<Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#000', border: '1px solid #000', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)', color: '#FFF', border: '1px solid #000',}, fontSize: '25px', }} onClick={restart}>Restart</Button>
-        <Box>
-           <Typography sx={{fontWeight: '', fontSize: '20px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
-		To learn more, click on
-                <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"  style={{ fontFamily: "'Barlow', Arial, sans-serif", color: '#31F5A7', }}>this link</a>!
-	   </Typography>
-        </Box>
-        
-       </div>
-      </>
+        <EmailBox />
+        <Button sx={{ my: { xs: 3, md: '50px' }, color: '#000', border: '1px solid #000', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)', color: '#FFF', border: '1px solid #000' }, fontSize: { xs: 20, sm: 25 } }} onClick={restart}>Restart</Button>
+        <Typography sx={{ fontSize: { xs: 17, sm: 20 }, m: { xs: 2, md: '30px' }, px: 2, textAlign: 'center', color: '#000' }}>
+          To learn more, click on{' '}
+          <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer" style={{ color: '#31F5A7' }}>this link</a>!
+        </Typography>
+      </div>
     );
   }
-
-/*
-        */
 
   if (!pair || pair.length < 2) {
     return (
-      <div style={{ padding: 20 }}>
-      <Box sx={{
-         width: '100%',
-         height: 'flex',
-         display: 'flex',
-         backgroundColor: "rgba(0,0,0,0.5)",
- 	 position: 'fixed', top:'0px', 
-      }}>
-         <Box 
-            component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
-            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
-         />
-         <Typography sx={{ margin: '10px', fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '50px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
-      </Box>
+      <div style={{ padding: '70px 20px 20px' }}>
+        <SiteHeader />
         <h2>Not enough videos to compare</h2>
-        <Button sx= {{ gap: '150px', margin: '100px 0'}}  onClick={restart}>Reload</Button>
+        <Button sx={{ my: 4 }} onClick={restart}>Reload</Button>
       </div>
     );
   }
-  
-  return (
-    <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: '#f5f3ef',}}>
-    <div style={{ fontFamily: "'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
-      <div>
-      <Box sx={{
-         width: '100%',
-         height: 'flex',
-         display: 'flex',
-         backgroundColor: "rgba(0,0,0,0.5)",
-         position: 'fixed',top:'0px',
-         zIndex: 100,
-         padding: '0 24px',
-      }}>
-         <Box 
-            component="img"
-            sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', position: 'fixed',top:'0px',left:'0px',}}
-            src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
-         />
-         <Typography sx={{ margin: '13px', fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '20px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
-      </Box>   
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', color: '#000' }}>
-        <span style={{ fontFamily: "'Barlow', Arial, sans-serif" }}>Click the video you think is{' '}</span>&nbsp;
-        <span style={{ fontFamily: "'Barlow', Arial, sans-serif" }}><strong>more complex</strong></span>&nbsp;
-      </Box>
-      
-      <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
-        <VideoCard item={pair[0]} onChoose={() => onChoose("left")} position="left" fadeAnimation={visible} />
-        <VideoCard item={pair[1]} onChoose={() => onChoose("right")} position="right" fadeAnimation={visible} />
-      </div>
-      <div style={{ padding: '20px 24px 32px', maxWidth: '900px', margin: '0 auto', width: '100%'}}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: 'center',  marginBottom: '10px',}}>
-           <Typography sx={{fontSize: 22, fontFamily: "'Barlow', Arial, sans-serif"}}>PROGRESS</Typography>
-	   <div style={{ display: "flex", alignItems: 'center', gap: '10px',}}>
-              <Typography sx={{fontSize: 30, fontWeight: 'bold', fontFamily: "'Barlow', Arial, sans-serif"}}>{vidnum - 1}</Typography>/<Typography sx={{fontSize: 22, fontFamily: "'Barlow', Arial, sans-serif"}}>{numVideos+1} pairs complete</Typography>
-           </div>
-        </div>
-        <div style={{ display: "flex", justifyContent: "center", }} >
-           <ProgressBar number={vidnum - 1} total={numVideos+1} />
-        </div>
-      </div>   
 
-      </div>
-      
-    </div>
+  return (
+    <div style={surveyPageStyle}>
+      <SiteHeader />
+      <ChoicePrompt />
+      <Box sx={videoRowSx}>
+        <VideoCard item={pair[0]} onChoose={() => onChoose("left")} fadeAnimation={visible} />
+        <VideoCard item={pair[1]} onChoose={() => onChoose("right")} fadeAnimation={visible} />
+      </Box>
+      <Box sx={{ px: { xs: 2, sm: 3 }, pt: { xs: 2, sm: '20px' }, pb: { xs: 3, sm: '32px' }, maxWidth: 900, mx: 'auto', width: '100%', boxSizing: 'border-box' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1, mb: '10px' }}>
+          <Typography sx={{ fontSize: { xs: 16, sm: 22 } }}>PROGRESS</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+            <Typography sx={{ fontSize: { xs: 22, sm: 30 }, fontWeight: 'bold' }}>{vidnum - 1}</Typography>
+            <Typography sx={{ fontSize: { xs: 16, sm: 22 } }}>/ {numVideos+1} pairs complete</Typography>
+          </Box>
+        </Box>
+        <ProgressBar number={vidnum - 1} total={numVideos+1} />
+      </Box>
     </div>
   );
 }
@@ -882,20 +742,22 @@ function ProgressBar({ number, total }) {
     );
 }
 
-function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
+function VideoCard({ item, onChoose, fadeAnimation }) {
   if (!item) return null;
   return (
     <Box
       onClick={onChoose}
       role="button"
       tabIndex={0}
+      aria-label="Choose this video as more complex"
       sx={{
         cursor: "pointer",
-        width: '100%',
+        // sized against viewport height too, so both videos fit on screen when stacked
+        width: { xs: 'min(100%, 34vh)', sm: 'min(45%, 58vh)' },
+        flexShrink: 0,
         border: "1.5px solid rgba(26,25,23,0.1)",
-        borderRadius: 8,
-        padding: '20px',
-	margin: position === "left" ? '0 2% 0 16%' : '0 16% 0 2%',
+        borderRadius: { xs: 3, sm: 8 },
+        padding: { xs: '8px', sm: '12px', md: '20px' },
         boxSizing: "border-box",
         backgroundColor: '#ffffff',
         '&:hover': { boxShadow: '0px 0px 40px #54A6F0' },
@@ -905,13 +767,11 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation }) {
       }}
       onKeyDown={(e) => { if (e.key === "Enter") onChoose(); }}
     >
-      <div style={{ marginBottom: '8px', fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 300, color: '#000', letterSpacing: '0.2em' }}>
-        
-      </div>
       {item.url && (
         <div style={{ lineHeight: 0, borderRadius: '2px', overflow: 'hidden', aspectRatio: '1', }}>
           <img
             src={process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "").replace(/\.gif$/i, ".gif")}
+            alt="Swarm simulation"
             style={{ width: "100%", height: "100%", objectFit: "cover", display: 'block' }}
           />
         </div>
@@ -1085,52 +945,41 @@ const final_message = [{ type: "instruction", textBefore: "Click the ", bold: "S
 
 function InstructionCard({ psg, textSize }) {
 
-   const newlinerender = (text) => 
+   const newlinerender = (text) =>
       text.split('\n').map((line, i, arr) => (
           <span key={i}>
               {line}
               {i < arr.length - 1 && <br />}
           </span>
       ));
+   const cardStyle = {
+      width: '100%',
+      maxWidth: '500px',
+      boxSizing: 'border-box',
+      margin: '0 auto',
+      borderRadius: '10px',
+      backgroundColor: 'white',
+      color: '#003366',
+      padding: 'clamp(24px, 12vh, 150px) 20px',
+      fontSize: `clamp(17px, 4.5vw, ${textSize})`,
+   };
    if (typeof psg === "string") {
       return (
-         <div style={{ 
-           width: '400px', 
-           height: '300px', 
-           borderRadius: '10px', 
-           borderColor: '#3399FF', 
-           backgroundColor: 'white', 
-           color: '#003366', 
-           padding: '150px 20px',
-	   whiteSpace: 'pre-wrap',
-           fontSize: textSize,
-         }}>
+         <div style={{ ...cardStyle, whiteSpace: 'pre-wrap' }}>
            {psg}
          </div>
       );
    }
    if (psg.type === "instruction") {
       return (
-         <div style={{ 
-            width: '500px',
-            alignCenter: 'center',
-            justifyContent: 'center', 
-            height: 'flex', 
-            borderRadius: '10px', 
-            margin: '20px', 
-            borderColor: '#3399FF', 
-            backgroundColor: 'white', 
-            color: '#003366', 
-            padding: '150px 20px',
-            fontSize: textSize
-         }}>
+         <div style={cardStyle}>
             {newlinerender(psg.textBefore)}
             <strong>{newlinerender(psg.bold)}</strong>
             {newlinerender(psg.textAfter)}
          </div>
       );
    }
-} 
+}
 
 function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink, nextText, textSize }) {
    const [currentInstruction, setCurrentInstruction] = useState(0);
@@ -1140,59 +989,56 @@ function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink, 
    const prev = () => {
       setCurrentInstruction(curr => (curr - 1));
    };
+   const navButtonSx = { backgroundColor: '#80D4FF', color: '#000000', minWidth: 96, '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF' } };
    return (
-      <div style={{ width: '1000px',
-                   borderRadius: '50px',
-                   padding: '16px 20px',
-                   lineHeight: '1.5',
-                   background: '#FFF',
-                   display: 'flex',
-                   flexDirection: 'column', 
-                   gap: '20px', 
-                   marginTop: '5%',
-                   textAlign: 'center',
-                   alignItems: 'center', 
-                   justifyContent: 'center', }}>
-         <Typography 
+      <Box sx={{
+         width: 'calc(100% - 32px)',
+         maxWidth: '1000px',
+         boxSizing: 'border-box',
+         borderRadius: { xs: '20px', sm: '50px' },
+         padding: { xs: '16px 12px', sm: '16px 20px' },
+         lineHeight: 1.5,
+         background: '#FFF',
+         display: 'flex',
+         flexDirection: 'column',
+         gap: { xs: 1, sm: '20px' },
+         mt: { xs: 3, sm: '5%' },
+         mb: 3,
+         textAlign: 'center',
+         alignItems: 'center',
+         justifyContent: 'center',
+      }}>
+         <Typography
            variant="h4"
            sx={{
-             fontFamily: "'Barlow', Arial, sans-serif",
-             fontWeight: 600,
-             letterSpacing: '0.18em',
+             fontWeight: 'bold',
+             fontSize: { xs: '1.5rem', sm: '2.125rem' },
+             letterSpacing: { xs: '0.1em', sm: '0.18em' },
              textTransform: 'uppercase',
              color: '#003366',
-             fontWeight: 'bold',
-           }}> 
-             Instructions 
+           }}>
+             Instructions
          </Typography>
          <Fade in timeout={300} key={currentInstruction}>
-         <p>< InstructionCard psg={msgs[currentInstruction]} textSize={textSize} /></p>
+           <div style={{ width: '100%' }}><InstructionCard psg={msgs[currentInstruction]} textSize={textSize} /></div>
          </Fade>
-         <Box sx={{
-	      height: '50%', 
-	      alignItems: 'center', 
-	      gap: '5%',
-	      position: 'relative', }}>
-           {msgs.length > 1 && currentInstruction > 0 && 
-               (<Button onClick={prev} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF', textSize: textSize} }} >
-		   <Typography sx={{ textSize: textSize}}>Previous</Typography>
-                </Button>)
-           }
-           { msgs.length > 1 && <Typography sx={{ gap: '20px', fontWeight: 'bold', fontFamily: "'Barlow', Arial, sans-serif", }}>
-              {(currentInstruction+1)}/{msgs.length}
-           </Typography> }
+         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 2, pb: 1 }}>
+           {msgs.length > 1 && currentInstruction > 0 && (
+              <Button onClick={prev} sx={navButtonSx}>Previous</Button>
+           )}
+           {msgs.length > 1 && (
+              <Typography sx={{ fontWeight: 'bold' }}>
+                 {(currentInstruction+1)}/{msgs.length}
+              </Typography>
+           )}
            {msgs.length > 1 && currentInstruction < msgs.length - 1 && (
-		<Button onClick={next} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF'} }} >
-		   <Typography sx={{ textSize: textSize }}>Next</Typography>
-	        </Button>)
-	   }
+              <Button onClick={next} sx={navButtonSx}>Next</Button>
+           )}
            {currentInstruction >= msgs.length - 1 && !nextLink && (
-		<Button onClick={() => {setNextLink(true); console.log("next link is ", nextLink); setCurrLink(false);}} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF'} }} >
-		   <Typography sx={{ textSize: textSize}}>{nextText}</Typography>
-	        </Button>)
-	   }
+              <Button onClick={() => {setNextLink(true); console.log("next link is ", nextLink); setCurrLink(false);}} sx={navButtonSx}>{nextText}</Button>
+           )}
          </Box>
-      </div>
+      </Box>
    );
 }
 
@@ -1517,19 +1363,18 @@ function EmailBox({ xpos, ypos }) {
 
   return (
     <>
-      <Box sx={{ position: "relative", display: "inline-block", top: "20%" }}>
+      <Box sx={{ position: "relative", display: "inline-block" }}>
         <Button
           sx={{
-            width: "100%",
             margin: "5px",
             borderRadius: "5px",
             backgroundColor: "rgba(128, 207, 255, 0.5)",
-            padding: "20px",
+            padding: { xs: "12px 32px", sm: "20px 40px" },
             color: "#0022CC"
           }}
           onClick={renderEmail}
         >
-          <Typography sx={{ fontFamily: "'Barlow', Arial, sans-serif", fontWeight: "bold", fontSize: "30px" }}>
+          <Typography sx={{ fontWeight: "bold", fontSize: { xs: 22, sm: 30 } }}>
             Submit
           </Typography>
         </Button>
@@ -1638,7 +1483,7 @@ function DemographicsForm({ errors, countries, languages, professions }) {
     const degrees = ["High School Diploma", "Bachelor's", "Graduate/Master's", "Ph.D/Doctorate"];
 
     return (
-       <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'left', marginLeft: '5%', }}>
+       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
                <Typography sx={{  }}> Please select which age range applies to you: </Typography>
                    <Select value={age} required onChange={(e) => {
@@ -1720,18 +1565,113 @@ function DemographicsForm({ errors, countries, languages, professions }) {
 
 /* STYLING FEATURES */
 // Main header for the swarm survey
+const HEADER_HEIGHT = 50;
+
+const bgPageStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  width: '100%',
+  minHeight: '100vh',
+  boxSizing: 'border-box',
+  paddingTop: HEADER_HEIGHT,
+  overflowX: 'hidden',
+  background: `url('general-white-blue.jpg')`,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
+};
+
+const surveyPageStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  width: '100%',
+  minHeight: '100vh',
+  boxSizing: 'border-box',
+  paddingTop: HEADER_HEIGHT,
+  overflowX: 'hidden',
+  background: '#f5f3ef',
+};
+
+// stacks the two videos vertically on phones / narrow windows
+const videoRowSx = {
+  display: 'flex',
+  flexDirection: { xs: 'column', sm: 'row' },
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: { xs: 2, sm: 3, md: 4 },
+  px: 2,
+  width: '100%',
+  boxSizing: 'border-box',
+};
+
+const primaryButtonSx = {
+  backgroundColor: "#FFF",
+  fontWeight: 'bold',
+  fontSize: '15px',
+  letterSpacing: '0.15em',
+  textTransform: 'uppercase',
+  color: '#9a9690',
+  border: '1px solid rgba(26,25,23,0.2)',
+  borderRadius: '4px',
+  padding: { xs: '8px 24px', sm: '10px 28px' },
+  minWidth: 180,
+  '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' },
+};
+
+function SiteHeader() {
+  return (
+    <Box component="header" sx={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: HEADER_HEIGHT,
+      zIndex: 100,
+      display: 'flex',
+      alignItems: 'center',
+      gap: { xs: 1, sm: 2 },
+      pr: 2,
+      boxSizing: 'border-box',
+      backgroundColor: "rgba(0,0,0,0.5)",
+    }}>
+      <Box
+        component="img"
+        alt="Exalabs logo"
+        sx={{ height: HEADER_HEIGHT, display: 'block' }}
+        src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
+      />
+      <Typography sx={{
+        fontWeight: 'bold',
+        fontSize: { xs: 12, sm: 15 },
+        letterSpacing: { xs: '0.1em', sm: '0.16em' },
+        textTransform: 'uppercase',
+        color: '#FFF',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      }}>
+        Exalabs UMass Lowell
+      </Typography>
+    </Box>
+  );
+}
+
+function ChoicePrompt() {
+  return (
+    <Typography sx={{ textAlign: 'center', color: '#000', fontSize: { xs: 20, sm: 25 }, px: 2, py: { xs: 2, sm: 4, md: '60px' } }}>
+      Click the video you think is <strong>more complex</strong>
+    </Typography>
+  );
+}
+
+// Main header for the swarm survey
 function MainHeader() {
   return (
-    <Box sx={{
-      width: 'flex',
-      height: '80%',
-      textAlign: 'center',
-      justifyContent: 'center',
-      fontSize: '100px',
-      fontColor: '#FFF',
-      padding: '100px',
-    }}>
-      <Typography sx={{fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: '70px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', padding: '20px', color: '#000', }}>
+    <Box sx={{ textAlign: 'center', px: { xs: 2, sm: 4, md: '100px' }, pt: { xs: 5, sm: 8, md: '100px' }, pb: { xs: 2, md: 4 } }}>
+      <Typography component="h1" sx={{ fontWeight: 'bold', fontSize: { xs: 32, sm: 48, md: 70 }, lineHeight: 1.15, color: '#000' }}>
         Welcome to the swarm complexity ranking survey!
       </Typography>
     </Box>
