@@ -425,24 +425,25 @@ const onChoose = useCallback((chosenSide) => {
 
   const alpha = 0.5;
 
-setBetas(prev => {
-  const beta_i = prev[chosen.id];
-  const beta_j = prev[notChosen.id];
+  setBetas(prev => {
+    const beta_i = prev[chosen.id];
+    const beta_j = prev[notChosen.id];
 
-  const p = Math.exp(beta_i) / (Math.exp(beta_i) + Math.exp(beta_j));
+    const p = Math.exp(beta_i) / (Math.exp(beta_i) + Math.exp(beta_j));
 
-  const new_i = beta_i + alpha * (1 - p);
-  const new_j = beta_j - alpha * (1 - p);
+    const new_i = beta_i + alpha * (1 - p);
+    const new_j = beta_j - alpha * (1 - p);
 
-  return {
-    ...prev,
-    [chosen.id]: new_i,
-    [notChosen.id]: new_j
-  };
-});
+    return {
+      ...prev,
+      [chosen.id]: new_i,
+      [notChosen.id]: new_j
+    };
+  });
 
   const nextPair = pairs[0];
   if (!nextPair) {
+    console.log("no next pair anymore");
     setEnded(true);
     setPair([]);
     return;
@@ -559,51 +560,55 @@ function shuffleNoConsecutive(arr) { // important to ensure that the same behavi
   return result;
 }
 
-  const restart = () => {
+const restart = () => {
     console.log("in restart");
     var s = shuffleNoConsecutive(items);
     var behavior = s[0].id.split("/")[2];
     while (behavior === "unknown") {
-      console.log("Nope it's unknown");
-      s = shuffleNoConsecutive(items);
-      behavior = s[0].id.split("/")[2];
+        console.log("Nope it's unknown");
+        s = shuffleNoConsecutive(items);
+        behavior = s[0].id.split("/")[2];
     }
     setBehavior(s[0].id.split("/")[2]);
     setBehavior(specificBehavior);
     console.log("Number of items is "+String(items.length));
     console.log("Item first is "+s[0].url);
     setPool(s);
+    console.log("pool is ", pool);
     if (s.length >= 2) {
-      console.log("set pair to first two");
-      setPair([s[0], s[1]]);
-      setPool(prev => {
-        // compute new pool from current state if needed
-        return s.slice(2);
-      });
+        console.log("set pair to first two");
+        setPair([s[0], s[1]]);
+        setPool(prev => {
+            // compute new pool from current state if needed
+            return s.slice(2);
+        });
     } else {
-      console.log("just list is s");
-      setPair(s);
-      setPool([]);
+        console.log("just list is s");
+        setPair(s);
+        setPool([]);
     }
     setResults([]);
     setRankings([]);
     setVidnum(1);
-    setPairs(p => p.slice(1));
+    const genpairs = generatePairs(items.filter(v => v.id.includes(behavior)));
+    var sortedpairs = [...genpairs].sort(() => Math.random() - 0.5);
+    setPairs(sortedpairs);
     rankedVideos = {};
     selectionTimes = {};
     notSelectionTimes = {};
     setInitSurvey(true);
-
+    
     if (numVideos == 0 && sorted.length > 0) {
-       location.reload()
+        location.reload()
     }
     
     console.log("behavior: "+behavior);
     setEnded(false);
+    console.log("pairs: ", pairs);
     setTitleFloat(false);
     console.log("setting float");
     setStart(performance.now());
-  };
+};
 
   useEffect(() => {
     setDisplay((n) => ( (n+1)%2 ));
