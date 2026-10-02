@@ -720,7 +720,17 @@ const restart = () => {
     return (
       <div style={headerStyle}>
       <SurveyHeader />
-      <Box sx={{borderRadius: '10px', display: 'flex', flexDirection: 'column',  width: '50%', height: '80%', border: '2px solid #001000', margin: '10% 0 0 0', }}>
+      <Box sx={{
+        borderRadius: '10px',
+        display: 'flex',
+        flexDirection: 'column',
+        width: { xs: 'calc(100% - 32px)', sm: '80%', md: '50%' },
+        maxWidth: 700,
+        boxSizing: 'border-box',
+        border: '2px solid #001000',
+        mt: { xs: 3, md: '10%' },
+        mb: 4,
+      }}>
         <DemographicsForm errors={errors} countries={countries} professions={professions}/>
         <Button sx={buttonStyle} variant="contained" onClick={() => {
            // goes to the next screen for getting user demographics
@@ -902,7 +912,8 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation, pairIndex
       tabIndex={0}
       sx={{
         cursor: "pointer",
-        width: "500px",
+        // capped against viewport height too, so stacked cards still fit on short/mobile screens
+        width: { xs: 'min(100%, 55vh)', sm: '500px' },
 		maxWidth: "100%",
         border: "1.5px solid rgba(26,25,23,0.1)",
         borderRadius: 8,
@@ -1107,45 +1118,34 @@ function InstructionCard({ psg, textSize }) {
               {i < arr.length - 1 && <br />}
           </span>
       ));
+   const cardStyle = {
+      width: '100%',
+      maxWidth: '500px',
+      boxSizing: 'border-box',
+      margin: '0 auto',
+      borderRadius: '10px',
+      backgroundColor: 'white',
+      color: '#003366',
+      padding: 'clamp(24px, 12vh, 150px) 20px',
+      fontSize: `clamp(17px, 4.5vw, ${textSize})`,
+   };
    if (typeof psg === "string") {
       return (
-         <div style={{ 
-           width: '400px', 
-           height: '300px', 
-           borderRadius: '10px', 
-           borderColor: '#3399FF', 
-           backgroundColor: 'white', 
-           color: '#003366', 
-           padding: '150px 20px',
-       whiteSpace: 'pre-wrap',
-           fontSize: textSize,
-         }}>
+         <div style={{ ...cardStyle, whiteSpace: 'pre-wrap' }}>
            {psg}
          </div>
       );
    }
    if (psg.type === "instruction") {
       return (
-         <div style={{ 
-            width: '500px',
-            alignCenter: 'center',
-            justifyContent: 'center', 
-            height: 'flex', 
-            borderRadius: '10px', 
-            margin: '20px', 
-            borderColor: '#3399FF', 
-            backgroundColor: 'white', 
-            color: '#003366', 
-            padding: '150px 20px',
-            fontSize: textSize
-         }}>
+         <div style={cardStyle}>
             {newlinerender(psg.textBefore)}
             <strong>{newlinerender(psg.bold)}</strong>
             {newlinerender(psg.textAfter)}
          </div>
       );
    }
-} 
+}
 
 function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink, nextText, textSize }) {
    const [currentInstruction, setCurrentInstruction] = useState(0);
@@ -1155,59 +1155,53 @@ function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink, 
    const prev = () => {
       setCurrentInstruction(curr => (curr - 1));
    };
+   const navButtonSx = { backgroundColor: '#80D4FF', color: '#000000', minWidth: 96, '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF' } };
    return (
-      <div style={{ width: '1000px',
-                   borderRadius: '50px',
-                   padding: '16px 20px',
+      <Box sx={{ width: 'calc(100% - 32px)',
+                   maxWidth: '1000px',
+                   boxSizing: 'border-box',
+                   borderRadius: { xs: '20px', sm: '50px' },
+                   padding: { xs: '16px 12px', sm: '16px 20px' },
                    lineHeight: '1.5',
                    background: '#FFF',
                    display: 'flex',
-                   flexDirection: 'column', 
-                   gap: '20px', 
-                   marginTop: '5%',
+                   flexDirection: 'column',
+                   gap: { xs: 1, sm: '20px' },
+                   mt: { xs: 3, sm: '5%' },
+                   mb: 3,
                    textAlign: 'center',
-                   alignItems: 'center', 
+                   alignItems: 'center',
                    justifyContent: 'center', }}>
-         <Typography 
+         <Typography
            variant="h4"
            sx={{
              fontFamily: "'Cormorant Garamond', Georgia, serif",
-             fontWeight: 600,
-             letterSpacing: '0.18em',
+             fontWeight: 'bold',
+             fontSize: { xs: '1.5rem', sm: '2.125rem' },
+             letterSpacing: { xs: '0.1em', sm: '0.18em' },
              textTransform: 'uppercase',
              color: '#003366',
-             fontWeight: 'bold',
-           }}> 
-             Instructions 
+           }}>
+             Instructions
          </Typography>
          <Fade in timeout={300} key={currentInstruction}>
-         <p>< InstructionCard psg={msgs[currentInstruction]} textSize={textSize} /></p>
+         <div style={{ width: '100%' }}>< InstructionCard psg={msgs[currentInstruction]} textSize={textSize} /></div>
          </Fade>
-         <Box sx={{
-          height: '50%', 
-          alignItems: 'center', 
-          gap: '5%',
-          position: 'relative', }}>
-           {msgs.length > 1 && currentInstruction > 0 && 
-               (<Button onClick={prev} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF', textSize: textSize} }} >
-           <Typography sx={{ textSize: textSize}}>Previous</Typography>
-                </Button>)
+         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 2, pb: 1 }}>
+           {msgs.length > 1 && currentInstruction > 0 &&
+               (<Button onClick={prev} sx={navButtonSx}>Previous</Button>)
            }
-           { msgs.length > 1 && <Typography sx={{ gap: '20px', fontWeight: 'bold', fontFamily: `'Orbitron', 'Roboto Mono', 'JetBrains Mono', monospace`, }}>
+           { msgs.length > 1 && <Typography sx={{ fontWeight: 'bold', fontFamily: `'Orbitron', 'Roboto Mono', 'JetBrains Mono', monospace`, }}>
               {(currentInstruction+1)}/{msgs.length}
            </Typography> }
            {msgs.length > 1 && currentInstruction < msgs.length - 1 && (
-        <Button onClick={next} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF'} }} >
-           <Typography sx={{ textSize: textSize }}>Next</Typography>
-            </Button>)
+        <Button onClick={next} sx={navButtonSx}>Next</Button>)
        }
            {currentInstruction >= msgs.length - 1 && !nextLink && (
-        <Button onClick={() => {setNextLink(true); console.log("next link is ", nextLink); setCurrLink(false);}} sx={{ backgroundColor: '#80D4FF', color: '#000000', '&:hover': { backgroundColor: '#0066FF', color: '#FFFFFF'} }} >
-           <Typography sx={{ textSize: textSize}}>{nextText}</Typography>
-            </Button>)
+        <Button onClick={() => {setNextLink(true); console.log("next link is ", nextLink); setCurrLink(false);}} sx={navButtonSx}>{nextText}</Button>)
        }
          </Box>
-      </div>
+      </Box>
    );
 }
 
@@ -1836,19 +1830,19 @@ function CompleteText({fontSize}) {
 // Main header for the swarm survey
 function MainHeader({ fadeAnimation }) {
   return (
-    <Box sx={{    
-      width: 'flex',
-      height: '80%', 
-      textAlign: 'center', 
+    <Box sx={{
+      width: '100%',
+      boxSizing: 'border-box',
+      textAlign: 'center',
       justifyContent: 'center',
-      fontSize: '100px',
-      fontColor: '#FFF',
-      padding: '100px',
-      opacity: fadeAnimation ? 1 : 0, 
+      px: { xs: 2, sm: 4, md: '100px' },
+      pt: { xs: 5, sm: 8, md: '100px' },
+      pb: { xs: 2, md: 4 },
+      opacity: fadeAnimation ? 1 : 0,
       transform: fadeAnimation ? "translateY(0)" : "translateY(-50px)",
       transition: "opacity 1s ease-out, transform 1s ease-out",
     }}>
-      <Typography sx={{fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 'bold', fontSize: '70px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', padding: '20px', color: '#000', }}>
+      <Typography component="h1" sx={{fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 'bold', fontSize: { xs: 32, sm: 48, md: 70 }, lineHeight: 1.15, alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', color: '#000', }}>
         Welcome to the swarm complexity ranking survey!
       </Typography>
     </Box>
@@ -1861,32 +1855,34 @@ function SurveyHeader() {
       <Box sx={{
          width: '100%',
          height: '50px',
+         boxSizing: 'border-box',
          display: 'flex',
          flexDirection: 'row',
          alignItems: 'center',
          backgroundColor: "rgba(0,0,0,0.5)",
-         position: 'fixed', top:'0px', left:'40px',
+         position: 'fixed', top:'0px', left:0,
          zIndex: 10000,
-         paddingLeft: '20px',
-         //padding: '0% 15%',
+         paddingLeft: '58px',
+         paddingRight: { xs: 1, sm: 2 },
       }}>
-         <Box 
+         <Box
             component="img"
+            alt="Exalabs logo"
             sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', position: 'fixed',top:'0px',left:'0px',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: '13px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '20px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: { xs: '6px', sm: '13px' }, fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: { xs: 11, sm: 15 }, letterSpacing: { xs: '0.06em', sm: '0.16em' }, textTransform: 'uppercase', color: '#FFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', }}> Exalabs UMass Lowell </Typography>
          <Button sx={{
-            ...buttonStyle, 
-            top:'0px', margin: '0px 0 0', marginLeft: 'auto', marginRight: '80px',}} variant="contained">
-            <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"  
-              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", color: "rgba(0,0,0,0.5)", textDecoration: 'none',}}
+            ...buttonStyle,
+            top:'0px', margin: '0px 0 0', marginLeft: 'auto', marginRight: { xs: 0, sm: '80px' }, padding: { xs: '6px 10px', sm: '10px 28px' },}} variant="contained">
+            <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"
+              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", color: "rgba(0,0,0,0.5)", textDecoration: 'none', fontSize: 'inherit',}}
             >
               MORE INFO
             </a>
          </Button>
       </Box>
-   );   
+   );
 }
 
 /* Double arrow for complexity */
