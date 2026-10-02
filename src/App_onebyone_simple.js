@@ -19,11 +19,9 @@ import {   Button,
   Menu, MenuProps, MenuItem,
   Select, SelectChangeEvent } from '@mui/material';
 import Multiselect from 'multiselect-react-dropdown';
-import { AnimatedBackground, useAnimationControls } from 'animated-backgrounds';
 import { styled } from '@mui/system';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import emailjs from 'emailjs-com';
-import { keyframes } from "@mui/system";
 import axios from "axios";
 
 // VideoPairApp.jsx
@@ -37,17 +35,6 @@ const REGISTRATION_API_URL = "https://netlogo-survey-registration.onrender.com";
 
 
 export default function VideoPairApp_simple() {
-  // CSS components
-  const body = {
-    height: "100%",
-    width: "100%",
-    border: "10px solid transparent",
-    borderImage: "url(https://vultimate1.github.io/grid-electronics.png)",
-    borderImageRepeat: "round",
-    transition: "background-color 0.8s ease",
-    boxSizing: "border-box",
-  };
-
   // states
   const [complete, setComplete] = useState(false); // has user completed survey already
   const [userEmail, setUserEmail] = useState(null); // user email
@@ -87,7 +74,6 @@ export default function VideoPairApp_simple() {
   const [rankings, setRankings] = useState([]); // ordered ranked videos after the survey
   const [display, setDisplay] = useState(0); // choose which results to display: rankings or the times
   const [numChanges, setNumChanges] = useState(0); // this is used to determine which results to display
-  const [titleFloat, setTitleFloat] = useState(false); // for floating animation for a header
   const [betas, setBetas] = useState({}); // bradley-terry probabilities of the next videos being selected
   const [numVideos, setNumVideos] = useState(0);
   const specificBehavior = "vision-mod";
@@ -132,12 +118,6 @@ useEffect(() => {
   if (fetched_email) {
     setUserEmail(decodeURIComponent(fetched_email));
   }
-
-  // Timing background render upon survey start up
-  const timer = setTimeout(() => {
-    setTitleFloat(true);
-  }, 50); // small delay ensures first render happens at opacity 0
-  return () => clearTimeout(timer);
 }, []);
 
 useEffect(() => {
@@ -156,15 +136,6 @@ useEffect(() => {
     setVisible(true);
   }, 500);
 }, [startInstructions]);
-
-
-// title text floats into screen
-useEffect(() => {
-  setTitleFloat(false);
-  setTimeout(() => {
-    setTitleFloat(true);
-  }, 1000);
-}, [display]);
 
 
   var text = ""; // display text at the end
@@ -248,17 +219,6 @@ useEffect(() => {
 const btProbability = (beta_i, beta_j) => {
   return Math.exp(beta_i) / (Math.exp(beta_i) + Math.exp(beta_j));
 };
-
-const floatFadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
 
 // generate the pairs of videos according to the list of videos for the probabilistic selection of videos as per the Bradley-Terry method
 function generatePairs(videos) {
@@ -518,7 +478,6 @@ useEffect(() => {
 
   // keyboard support: ArrowLeft picks left, ArrowRight picks right
   useEffect(() => {
-    setTitleFloat(false);
     const handler = (e) => {
       if (ended || loading) return;
       if (e.key === "ArrowLeft") onChoose("left");
@@ -529,9 +488,6 @@ useEffect(() => {
       rankedVideos[video.id] = index;
       //console.log("ended id: "+video+", index: "+index);
     });
-      setTimeout(() => {
-         setTitleFloat(true);
-      }, 1000); // small delay ensures first render happens at opacity 0
     return () => window.removeEventListener("keydown", handler);
   }, [ended, loading, pair]);
 
@@ -617,8 +573,6 @@ const restart = () => {
     console.log("behavior: "+behavior);
     setEnded(false);
     console.log("pairs: ", pairs);
-    setTitleFloat(false);
-    console.log("setting float");
     setStart(performance.now());
 };
 
@@ -655,15 +609,14 @@ const restart = () => {
     return (
       <div style={ headerStyle }>
         <SurveyHeader />
-        <MainHeader fadeAnimation={titleFloat} />
+        <MainHeader />
         <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column',}}>
             <Button sx={buttonStyle} variant="contained" onClick={() => {
                  // goes to the tutorial screen
                  setStartInstructions(false);
                  setPreSurvey(true);
-                 setTitleFloat(true);
             }}>
-                 <Typography sx={{ fontSize: 20, fontFamily: "'Cormorant Garamond', Georgia, serif"}}> <strong>Instructions</strong> </Typography>
+                 <Typography sx={{ fontSize: 20, fontFamily: "'Barlow', Arial, sans-serif"}}> <strong>Instructions</strong> </Typography>
             </Button>
 
         </Box>
@@ -673,9 +626,8 @@ const restart = () => {
            setStartInstructions(false);
            setPreSurvey(false);
            setDemographics(true);
-           setTitleFloat(true);
         }}>
-             <Typography sx={{ fontSize: 20, fontFamily: "'Cormorant Garamond', Georgia, serif"}}> <strong>Start</strong> </Typography>
+             <Typography sx={{ fontSize: 20, fontFamily: "'Barlow', Arial, sans-serif"}}> <strong>Start</strong> </Typography>
         </Button>
       </div>
     );
@@ -690,8 +642,8 @@ const restart = () => {
   }
   if (samplePair) { // display a sample pair for the user to select from
       return (
-          <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: '#f5f3ef', transition: 'background-color 0.5s ease', }}>
-    <div style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
+          <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: '#f5f3ef', }}>
+    <div style={{ fontFamily: "'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
       <div>
         <SurveyHeader />
         <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', margin: '0 auto', color: '#000' }}>
@@ -737,10 +689,9 @@ const restart = () => {
            if (validate()) {
               setDemographics(false);
               setInitSurvey(true);
-              setTitleFloat(true);
            }
         }}>
-                 <Typography sx={{ fontSize: 20, fontFamily: "'Cormorant Garamond', Georgia, serif"}}> <strong>Submit</strong> </Typography>
+                 <Typography sx={{ fontSize: 20, fontFamily: "'Barlow', Arial, sans-serif"}}> <strong>Submit</strong> </Typography>
         </Button>
       </Box>   
       </div>
@@ -767,11 +718,11 @@ const restart = () => {
       <>
       <div style={headerStyle}>
         <SurveyHeader />
-        <Box sx={{ justifyContent: 'center', alignItems: 'center', position: 'relative', opacity: titleFloat ? 1 : 0, transform: titleFloat ? "translateY(0)" : "translateY(-50px)", transition: "opacity 1s ease-out, transform 1s ease-out", }}>
-           <Typography sx={{fontWeight: 'bold', fontSize: '50px', fontFamily: "'Cormorant Garamond', Georgia, serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#000',}}>
+        <Box sx={{ justifyContent: 'center', alignItems: 'center', position: 'relative', }}>
+           <Typography sx={{fontWeight: 'bold', fontSize: '50px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#000',}}>
         Survey complete
        </Typography>
-           <Typography sx={{fontWeight: '', fontSize: '35px', fontFamily: "'Cormorant Garamond', Georgia, serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
+           <Typography sx={{fontWeight: '', fontSize: '35px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
         
        </Typography>
         </Box>
@@ -779,9 +730,8 @@ const restart = () => {
         <EmailBox xpos='0%' ypos='20%' userIP={userIPAddress}/>
 <Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#000', border: '1px solid #000', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)', color: '#FFF', border: '1px solid #000',}, fontSize: '25px', }} onClick={restart}>Restart</Button>
         <Box>
-           <Typography sx={{fontWeight: '', fontSize: '20px', fontFamily: "'Cormorant Garamond', Georgia, serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
-        To learn more, click on
-                <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"  style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", color: '#31F5A7', }}>this link</a>!
+           <Typography sx={{fontWeight: '', fontSize: '20px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
+        To learn more, click on <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"  style={{ fontFamily: "'Barlow', Arial, sans-serif", color: '#31F5A7', }}> this link</a>!
        </Typography>
         </Box>
         
@@ -801,8 +751,8 @@ const restart = () => {
   }
   
   return (
-    <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: '#f5f3ef', transition: 'background-color 0.5s ease', }}>
-    <div style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
+    <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: '#f5f3ef', }}>
+    <div style={{ fontFamily: "'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
       <div>
          <SurveyHeader /> 
          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', color: '#000' }}>
@@ -815,9 +765,9 @@ const restart = () => {
          </div>
          <div style={{ padding: '20px 24px 32px', maxWidth: '900px', margin: '0 auto', width: '100%'}}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: 'center',  marginBottom: '10px',}}>
-               <Typography sx={{fontSize: 22, fontFamily: "'Cormorant Garamond', Georgia, serif"}}>PROGRESS</Typography>
+               <Typography sx={{fontSize: 22, fontFamily: "'Barlow', Arial, sans-serif"}}>PROGRESS</Typography>
            <div style={{ display: "flex", alignItems: 'center', gap: '10px',}}>
-                  <Typography sx={{fontSize: 30, fontWeight: 'bold', fontFamily: "'Cormorant Garamond', Georgia, serif"}}>{vidnum - 1}</Typography>/<Typography sx={{fontSize: 22, fontFamily: "'Cormorant Garamond', Georgia, serif"}}>{numVideos} pairs complete</Typography>
+                  <Typography sx={{fontSize: 30, fontWeight: 'bold', fontFamily: "'Barlow', Arial, sans-serif"}}>{vidnum - 1}</Typography>/<Typography sx={{fontSize: 22, fontFamily: "'Barlow', Arial, sans-serif"}}>{numVideos} pairs complete</Typography>
                </div>
             </div>
             <div style={{ display: "flex", justifyContent: "center", }} >
@@ -855,7 +805,7 @@ function Timerbox({ start, time_to_choose }) {
     <div style={{ width: '200px', height: '200px', borderRadius: '200px', backgroundColor: "#CCFFFF", justifyContent: 'center', alignItems: 'center', display: 'flex', }}>
       <div style={{ width: '180px', height: '180px', borderRadius: '180px', backgroundColor: "#4D4DFF", position: 'relative', justifyContent: 'center', alignItems: 'center', display: 'flex', }}>
         <div style={{ width: '170px', height: '170px', borderRadius: '170px', backgroundColor: "#CCFFFF", justifyContent: 'center', alignItems: 'center', display: 'flex', }}>
-          <Typography sx={{ alignItems: 'center', fontWeight: 'bold', fontFamily: "'Orbitron', monospace", fontSize: '1.5rem', textShadow: `0 0 5px rgba(0,0,255,0.6), 0 0 10px rgba(0,0,255,0.4)`}}>{ count(timer, time_to_choose) }</Typography>
+          <Typography sx={{ alignItems: 'center', fontWeight: 'bold', fontFamily: "'Barlow', Arial, sans-serif", fontSize: '1.5rem', textShadow: `0 0 5px rgba(0,0,255,0.6), 0 0 10px rgba(0,0,255,0.4)`}}>{ count(timer, time_to_choose) }</Typography>
         </div>
       </div>
     </div>
@@ -927,8 +877,7 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation, pairIndex
         '&:hover': { boxShadow: '0px 0px 40px #54A6F0' },
         '&:active': { transform: 'translateY(0px) scale(0.995)' },
         opacity: fadeAnimation ? 1 : 0,
-        transform: fadeAnimation ? "translateX(0)" : position === "left" ? "translateX(-30px)" : "translateX(30px)",
-        transition: "opacity 1s ease-out, transform 1s ease-out",
+        transition: "opacity 0.3s ease-out",
       }}
       onKeyDown={(e) => { if (e.key === "Enter") onChoose(); }}
     >
@@ -1162,7 +1111,7 @@ function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink, 
                    boxSizing: 'border-box',
                    borderRadius: { xs: '20px', sm: '50px' },
                    padding: { xs: '16px 12px', sm: '16px 20px' },
-                   lineHeight: '1.5',
+                   lineHeight: '1.35',
                    background: '#FFF',
                    display: 'flex',
                    flexDirection: 'column',
@@ -1175,7 +1124,7 @@ function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink, 
          <Typography
            variant="h4"
            sx={{
-             fontFamily: "'Cormorant Garamond', Georgia, serif",
+             fontFamily: "'Barlow', Arial, sans-serif",
              fontWeight: 'bold',
              fontSize: { xs: '1.5rem', sm: '2.125rem' },
              letterSpacing: { xs: '0.1em', sm: '0.18em' },
@@ -1191,7 +1140,7 @@ function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink, 
            {msgs.length > 1 && currentInstruction > 0 &&
                (<Button onClick={prev} sx={navButtonSx}>Previous</Button>)
            }
-           { msgs.length > 1 && <Typography sx={{ fontWeight: 'bold', fontFamily: `'Orbitron', 'Roboto Mono', 'JetBrains Mono', monospace`, }}>
+           { msgs.length > 1 && <Typography sx={{ fontWeight: 'bold', fontFamily: "'Barlow', Arial, sans-serif", }}>
               {(currentInstruction+1)}/{msgs.length}
            </Typography> }
            {msgs.length > 1 && currentInstruction < msgs.length - 1 && (
@@ -1224,7 +1173,7 @@ function ChoiceCard({ chosen, notChosen, time }) {
         flexDirection: 'column',
      }}>
        <Typography sx={{
-         fontFamily: `'Orbitron', 'Roboto Mono', 'JetBrains Mono', monospace`,
+         fontFamily: "'Barlow', Arial, sans-serif",
          fontWeight: 600,
          letterSpacing: '0.12em',
          textTransform: 'uppercase', 
@@ -1247,7 +1196,7 @@ function ChoiceCard({ chosen, notChosen, time }) {
         flexDirection: 'column',
      }}>
        <Typography sx={{
-         fontFamily: `'Orbitron', 'Roboto Mono', 'JetBrains Mono', monospace`,
+         fontFamily: "'Barlow', Arial, sans-serif",
          fontWeight: 600,
          borderRadius: '5px',
          letterSpacing: '0.12em',
@@ -1539,7 +1488,7 @@ function EmailBox({ xpos, ypos, userIP }) {
           }}
           onClick={renderEmail}
         >
-          <Typography sx={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: "bold", fontSize: "30px" }}>
+          <Typography sx={{ fontFamily: "'Barlow', Arial, sans-serif", fontWeight: "bold", fontSize: "30px" }}>
             Submit
           </Typography>
         </Button>
@@ -1644,7 +1593,7 @@ function DemographicsForm({ errors, countries, professions }) {
     const [interests, setinterests] = useState("");
     const [profession, setProfession] = useState("");
     const [customProfession, setCustomProfession] = useState("");
-    const ages = ["18 - 22 years", "23 - 27 years", "28 - 32 years",  "33 - 37 years", "38 - 42 years", "43 - 47 years"];
+    const ages = ["Under 18 years", "18 - 22 years", "23 - 27 years", "28 - 32 years",  "33 - 37 years", "38 - 42 years", "43 - 50 years", "50+ years and over"];
     const degrees = ["High School Diploma", "Bachelor's", "Graduate/Master's", "Ph.D/Doctorate"];
     const languageNums = ["1", "2", "3", "4 or more"];   
 
@@ -1803,7 +1752,7 @@ function DemographicsForm({ errors, countries, professions }) {
 
 /* Styles */
 const headerStyle = {
-justifyContent: 'center', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`, transition: 'background-image 0.5s ease', backgroundSize: '100% 100%, 100% 100%, contain', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundBlendMode: 'multiply',
+justifyContent: 'center', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`, backgroundSize: '100% 100%, 100% 100%, contain', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundBlendMode: 'multiply',
 };
 
 const buttonStyle = {
@@ -1812,7 +1761,7 @@ margin: '48px 0 0', backgroundColor: "#FFF", fontWeight: 'bold', fontSize: '15px
 
 function PromptText({fontSize}) {
    return (
-      <Typography sx={{fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: fontSize, }}>
+      <Typography sx={{fontFamily: "'Barlow', Arial, sans-serif", fontSize: fontSize, }}>
          Click the video you think is <strong>more complex</strong>
       </Typography>
    );
@@ -1820,7 +1769,7 @@ function PromptText({fontSize}) {
 
 function CompleteText({fontSize}) {
    return (
-      <Typography sx={{fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: fontSize, }}>
+      <Typography sx={{fontFamily: "'Barlow', Arial, sans-serif", fontSize: fontSize, }}>
      You have already completed this survey as {' '} <strong>{userEmail}</strong> 
       </Typography>
    );
@@ -1828,7 +1777,7 @@ function CompleteText({fontSize}) {
 
 /* STYLING FEATURES */
 // Main header for the swarm survey
-function MainHeader({ fadeAnimation }) {
+function MainHeader() {
   return (
     <Box sx={{
       width: '100%',
@@ -1838,11 +1787,8 @@ function MainHeader({ fadeAnimation }) {
       px: { xs: 2, sm: 4, md: '100px' },
       pt: { xs: 5, sm: 8, md: '100px' },
       pb: { xs: 2, md: 4 },
-      opacity: fadeAnimation ? 1 : 0,
-      transform: fadeAnimation ? "translateY(0)" : "translateY(-50px)",
-      transition: "opacity 1s ease-out, transform 1s ease-out",
     }}>
-      <Typography component="h1" sx={{fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 'bold', fontSize: { xs: 32, sm: 48, md: 70 }, lineHeight: 1.15, alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', color: '#000', }}>
+      <Typography component="h1" sx={{fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: { xs: 32, sm: 48, md: 70 }, lineHeight: 1.15, alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', color: '#000', }}>
         Welcome to the swarm complexity ranking survey!
       </Typography>
     </Box>
@@ -1871,12 +1817,12 @@ function SurveyHeader() {
             sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex', position: 'fixed',top:'0px',left:'0px',}}
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
-         <Typography sx={{ margin: { xs: '6px', sm: '13px' }, fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: { xs: 11, sm: 15 }, letterSpacing: { xs: '0.06em', sm: '0.16em' }, textTransform: 'uppercase', color: '#FFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', }}> Exalabs UMass Lowell </Typography>
+         <Typography sx={{ margin: { xs: '6px', sm: '13px' }, fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: { xs: 11, sm: 15 }, letterSpacing: { xs: '0.06em', sm: '0.16em' }, textTransform: 'uppercase', color: '#FFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', }}> Exalabs UMass Lowell </Typography>
          <Button sx={{
             ...buttonStyle,
             top:'0px', margin: '0px 0 0', marginLeft: 'auto', marginRight: { xs: 0, sm: '80px' }, padding: { xs: '6px 10px', sm: '10px 28px' },}} variant="contained">
             <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"
-              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", color: "rgba(0,0,0,0.5)", textDecoration: 'none', fontSize: 'inherit',}}
+              style={{ fontFamily: "'Barlow', Arial, sans-serif", color: "rgba(0,0,0,0.5)", textDecoration: 'none', fontSize: 'inherit',}}
             >
               MORE INFO
             </a>
@@ -1915,7 +1861,7 @@ function DoubleArrow({ xpos, ypos }) {
      padding: '5px',
      fontSize: '25px',
   }}>
-  <Typography sx={{fontWeight: 'bold', fontSize: '25px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '20px', fontFamily: "'Orbitron', monospace", }}>
+  <Typography sx={{fontWeight: 'bold', fontSize: '25px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '20px', fontFamily: "'Barlow', Arial, sans-serif", }}>
      Most complex
   </Typography>
   </Box>
@@ -1953,7 +1899,7 @@ function DoubleArrow({ xpos, ypos }) {
      textColor: '#FFF',
      padding: '5px',
   }}>
-  <Typography sx={{fontWeight: 'bold', fontSize: '25px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '20px', fontFamily: "'Orbitron', monospace", }}>
+  <Typography sx={{fontWeight: 'bold', fontSize: '25px', alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '20px', fontFamily: "'Barlow', Arial, sans-serif", }}>
      Least complex
   </Typography>
   </Box>
