@@ -348,7 +348,7 @@ useEffect(() => {
        if (demographicsData["highestDegree"] == "" || demographicsData["highestDegree"] == "Degree") recentErrors.highestDegree = "Please select from the dropdown the highest degree you have attained.";
        if (demographicsData["numLanguages"] <= 0 || !Number.isInteger(Number(demographicsData["numLanguages"]))) recentErrors.numLanguages = "Entry must be a number greater than 0.";
        if (demographicsData["interests"] == "" || demographicsData["interests"] == "Enter interests") recentErrors.interests = "Please enter any interests you have.";
-       if (demographicsData["profession"] == "" || demographicsData["profession"] == "Professions") recentErrors.profession = "Please enter your current profession from the dropdown.";
+       // if (demographicsData["profession"] == "" || demographicsData["profession"] == "Professions") recentErrors.profession = "Please enter your current profession from the dropdown.";
        console.log(demographicsData);
        console.log(recentErrors);
        setErrors(recentErrors);
@@ -800,8 +800,8 @@ const restart = () => {
          </Box>
       
          <div style={{ display: "flex", gap: 12, alignItems: "stretch", flexWrap: "wrap", justifyContent: "center",}}>
-            <VideoCard item={pair[0]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => onChoose("left")} position="left" fadeAnimation={visible} />
-            <VideoCard item={pair[1]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => onChoose("right")} position="right" fadeAnimation={visible} />
+            <VideoCard item={pair[0]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => onChoose("left")} position="left" fadeAnimation={visible} cardKey="left" />
+            <VideoCard item={pair[1]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => onChoose("right")} position="right" fadeAnimation={visible} cardKey="right" />
          </div>
          <div style={{ padding: '20px 24px 32px', maxWidth: '900px', margin: '0 auto', width: '100%'}}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: 'center',  marginBottom: '10px',}}>
@@ -863,18 +863,24 @@ function ProgressBar({ number, total }) {
     );
 }
 
-function VideoCard({ item, onChoose, position = "left", fadeAnimation, reloadKey, setReloadKey }) {
+function VideoCard({ item, onChoose, position = "left", fadeAnimation, reloadKey, setReloadKey, cardKey }) {
   const observerRef = useRef();
- 
-    useEffect(() => {
+
+  useEffect(() => {
       const observer = new IntersectionObserver(
         (entries) => {
           // When the element enters the viewport, update the key
-          if (entries[0].isIntersecting) {
+          if (entries[0].isIntersecting) { 
+            /*const src = imgRef.current.src.split('?')[0];
+            imgRef.current.src = '';
+            // restart video with ref set to no
+            setTimeout(() => {
+              imgRef.current.src = `${src}?t=${Date.now()}`;
+            }, 0);*/
             setReloadKey(Date.now());
           }
         },
-        { threshold: 0.1 } // Triggers when 10% of the element is visible
+        { threshold: 0.001 } // Triggers when 10% of the element is visible
       );
 
       const currentElement = observerRef.current;
@@ -887,7 +893,7 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation, reloadKey
           observer.unobserve(currentElement);
         }
       };
-    }, []);
+  }, []);
 
   if (!item) return null;
   return (
@@ -916,14 +922,13 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation, reloadKey
       }}
       onKeyDown={(e) => { if (e.key === "Enter") onChoose(); }}
     >
-      <div style={{ marginBottom: '8px', fontFamily: "'DM Mono', monospace", fontWeight: 300, color: '#000', letterSpacing: '0.2em' }}>
-        
-      </div>
       {item.url && (
         <div ref={observerRef} style={{ lineHeight: 0, borderRadius: '2px', overflow: 'hidden', aspectRatio: '1', }}>
           <img
-            src={`${process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "").replace(/\.gif$/i, ".gif")}?cb=${reloadKey}`}
+            key={item.url}
+            src={`${process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "").replace(/\.gif$/i, ".gif")}?t=${Date.now()}`}
             style={{ width: "100%", height: "100%", objectFit: "cover", display: 'block' }}
+            alt="animation"
           />
         </div>
       )}
@@ -1366,8 +1371,8 @@ const getFile = (userIP) => {
       let demoColumns = ["", "", "", "", ""];
       if (index === 0) demoColumns = ["", "Level of Education", demographicsData["highestDegree"]];
       if (index === 1) demoColumns = ["", "Number of Languages", demographicsData["numLanguages"]];
-      if (index === 2) demoColumns = ["", "interests", demographicsData["interests"]];
-      if (index === 3) demoColumns = ["", "Profession", demographicsData["profession"]];
+      if (index === 2) demoColumns = ["", "Interests", demographicsData["interests"]];
+      // if (index === 3) demoColumns = ["", "Profession", demographicsData["profession"]];
       
       return [
         index+1, // Current Rank
@@ -1662,37 +1667,37 @@ function DemographicsForm({ errors, countries, professions }) {
     };
 
 
-const syncProfession = (list, custom) => {
-   const typed = custom.trim();
-   const combined = [...list, ...(typed ? [typed] : [])].join(",");
-   demographicsData["profession"] = combined;
-   console.log("New profession: " + combined);
-};
+    const syncProfession = (list, custom) => {
+       const typed = custom.trim();
+       const combined = [...list, ...(typed ? [typed] : [])].join(",");
+       demographicsData["profession"] = combined;
+       console.log("New profession: " + combined);
+    };
 
-// user picked from the list
-const handleProfessionChange = (selectedList) => {
-   setProfession(selectedList);
-   setCustomProfession(""); // search box clears after a selection
-   syncProfession(selectedList, "");
-};
+    // user picked from the list
+    const handleProfessionChange = (selectedList) => {
+       setProfession(selectedList);
+       setCustomProfession(""); // search box clears after a selection
+       syncProfession(selectedList, "");
+    };
 
-// user typed in the search box
-const handleProfessionSearch = (value) => {
-   const isCustom = value.trim() !== "" && !professions.includes(value);
-   const custom = isCustom ? value : "";
-   setCustomProfession(custom);
-   syncProfession(profession, custom);
-};
+    // user typed in the search box
+    const handleProfessionSearch = (value) => {
+       const isCustom = value.trim() !== "" && !professions.includes(value);
+       const custom = isCustom ? value : "";
+       setCustomProfession(custom);
+       syncProfession(profession, custom);
+    };
 
-const commitCustomProfession = () => {
-   const typed = customProfession.trim();
-   setCustomProfession("");
-   if (!typed || profession.includes(typed)) return;
+    const commitCustomProfession = () => {
+       const typed = customProfession.trim();
+       setCustomProfession("");
+       if (!typed || profession.includes(typed)) return;
 
-   const updated = [...profession, typed];   // keep existing chips, add the typed one
-   setProfession(updated);
-   syncProfession(updated, "");
-};
+       const updated = [...profession, typed];   // keep existing chips, add the typed one
+       setProfession(updated);
+       syncProfession(updated, "");
+    };
 
     return (
        <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'left', marginLeft: '5%', }}>
@@ -1752,36 +1757,39 @@ const commitCustomProfession = () => {
                    </Box>
                    {errors.interests && <Typography color="error" variant="caption">{errors.interests}</Typography>}
            </Box>
+       </Box>
+    );
+}
+
+/*
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
                <Typography sx={{  }}> What best describes your profession? </Typography>
                    <Box sx={{borderRadius: 1, border: '1px solid #D4D0CF'}}>
 
-<div
-   onBlur={(e) => {
-      // ignore blur caused by clicking an option inside the dropdown
-      if (!e.currentTarget.contains(e.relatedTarget)) {
-         commitCustomProfession();
-      }
-   }}
->
-   <Multiselect
-      options={professions}
-      singleSelect={false}
-      isObject={false}
-      selectedValues={profession}
-      onSelect={handleProfessionChange}
-      onRemove={handleProfessionChange}
-      onSearch={handleProfessionSearch}
-      displayValue="Enter and select profession"
-   />
-</div>                 
+                      <div
+                         onBlur={(e) => {
+                            // ignore blur caused by clicking an option inside the dropdown
+                            if (!e.currentTarget.contains(e.relatedTarget)) {
+                               commitCustomProfession();
+                            }
+                         }}
+                      >
+                         <Multiselect
+                            options={professions}
+                            singleSelect={false}
+                            isObject={false}
+                            selectedValues={profession}
+                            onSelect={handleProfessionChange}
+                            onRemove={handleProfessionChange}
+                            onSearch={handleProfessionSearch}
+                            displayValue="Enter and select profession"
+                         />
+                      </div>                 
                    
                    </Box>
                    {errors.profession && <Typography color="error" variant="caption">{errors.profession}</Typography>}
            </Box>
-       </Box>
-    );
-}
+           */
 
 // Adjusting width of window
 
