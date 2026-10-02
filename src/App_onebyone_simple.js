@@ -1662,7 +1662,7 @@ function SiteHeader() {
 function ChoicePrompt() {
   return (
     <Typography sx={{ textAlign: 'center', color: '#000', fontSize: { xs: 20, sm: 25 }, px: 2, py: { xs: 2, sm: 4, md: '60px' } }}>
-      Click the video you think is <strong>more complex</strong>
+      Click the swarm behavior you think is <strong>more complex</strong>
     </Typography>
   );
 }
