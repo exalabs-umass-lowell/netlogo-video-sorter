@@ -129,13 +129,13 @@
 {"name":"VID64",
  "id":"/swarm-videos/vision-mod/vis=8_minsep=0.75_maxalignturn=6.5_maxcohereturn=5.5_maxsepturn=3.5_pop=155.GIF"},
 {"name":"VID65",
- "id":"/swarm-videos/vision-mod-static/vis=2_minsep=5_maxalignturn=20_maxcohereturn=20_maxsepturn=20_pop=155.GIF"},
+ "id":"/swarm-videos/vision-static/vis=2_minsep=5_maxalignturn=20_maxcohereturn=20_maxsepturn=20_pop=155.GIF"},
 {"name":"VID66",
- "id":"/swarm-videos/vision-mod-static/vis=4_minsep=5_maxalignturn=20_maxcohereturn=20_maxsepturn=20_pop=155.GIF"},
+ "id":"/swarm-videos/vision-static/vis=4_minsep=5_maxalignturn=20_maxcohereturn=20_maxsepturn=20_pop=155.GIF"},
 {"name":"VID67",
- "id":"/swarm-videos/vision-mod-static/vis=6_minsep=5_maxalignturn=20_maxcohereturn=20_maxsepturn=20_pop=155.GIF"},
+ "id":"/swarm-videos/vision-static/vis=6_minsep=5_maxalignturn=20_maxcohereturn=20_maxsepturn=20_pop=155.GIF"},
 {"name":"VID68",
- "id":"/swarm-videos/vision-mod-static/vis=8_minsep=5_maxalignturn=20_maxcohereturn=20_maxsepturn=20_pop=155.GIF"},
+ "id":"/swarm-videos/vision-static/vis=8_minsep=5_maxalignturn=20_maxcohereturn=20_maxsepturn=20_pop=155.GIF"},
 {"name":"VID69",
- "id":"/swarm-videos/vision-mod-static/vis=9_minsep=5_maxalignturn=20_maxcohereturn=20_maxsepturn=20_pop=155.GIF"}
+ "id":"/swarm-videos/vision-static/vis=9_minsep=5_maxalignturn=20_maxcohereturn=20_maxsepturn=20_pop=155.GIF"}
 ]
