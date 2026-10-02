@@ -90,7 +90,17 @@ export default function VideoPairApp_simple() {
   const [titleFloat, setTitleFloat] = useState(false); // for floating animation for a header
   const [betas, setBetas] = useState({}); // bradley-terry probabilities of the next videos being selected
   const [numVideos, setNumVideos] = useState(0);
-  const specificBehavior = "maxalignturn-mod";
+  const specificBehavior = "vision-mod";
+
+const [width, setWidth] = useState(window.innerWidth);
+
+useEffect(() => {
+  const onResize = () => setWidth(window.innerWidth);
+  window.addEventListener("resize", onResize);
+  return () => window.removeEventListener("resize", onResize); // cleanup
+}, []);
+
+const fontSize = width < 600 ? "1rem" : "1.5rem";
 
 const getIP = async() => {
   try {
@@ -288,6 +298,7 @@ function generatePairs(videos) {
         });
         setBetas(betavals);
         setNumVideos(pairs.length);
+        console.log("item lengths: "+numVideos);
         console.log("pairs length: "+pairs.length);
       } catch (err) {
         console.error(err);
@@ -362,6 +373,7 @@ useEffect(() => {
   const p = generatePairs(filtered);
   var sorted = [...p].sort(() => Math.random() - 0.5); // shuffle
   console.log("behavior is "+behavior);
+  console.log("number of sorted is now "+sorted.length);
   setPairs(sorted);
   for (var i=0; i<sorted.length; i++) {
     console.log(sorted[i]);
@@ -422,6 +434,7 @@ const onChoose = useCallback((chosenSide) => {
     setPair([]);
     return;
   }
+  console.log("we have ", (pairs).length, " left");
 
   const alpha = 0.5;
 
@@ -441,7 +454,7 @@ const onChoose = useCallback((chosenSide) => {
     };
   });
 
-  const nextPair = pairs[0];
+  const nextPair = pairs[1];
   if (!nextPair) {
     console.log("no next pair anymore");
     setEnded(true);
@@ -460,7 +473,6 @@ const onChoose = useCallback((chosenSide) => {
     });
     setPairs(p => p.slice(1)); // remove the current pair from the set of pairs to display
     setPair(nextPair); // set current pair to top pair
-    //setPool(p => p.slice(1)); 
     setVidnum(v => v + 1); // increment pair number 
     console.log("pool is now: ");
     console.log(pool);
@@ -469,7 +481,7 @@ const onChoose = useCallback((chosenSide) => {
     setVisible(true);
   }, 500);
   setStart(performance.now());
-}, [pair, pool]);
+}, [pair, pool, pairs]);
 
 // add current to ranked videos
 useEffect(() => {
@@ -1633,6 +1645,7 @@ function DemographicsForm({ errors, countries, professions }) {
     const [numLanguages, setNumLanguages] = useState("");
     const [interests, setinterests] = useState("");
     const [profession, setProfession] = useState("");
+    const [customProfession, setCustomProfession] = useState("");
     const ages = ["18 - 22 years", "23 - 27 years", "28 - 32 years",  "33 - 37 years", "38 - 42 years", "43 - 47 years"];
     const degrees = ["High School Diploma", "Bachelor's", "Graduate/Master's", "Ph.D/Doctorate"];
    
@@ -1648,19 +1661,38 @@ function DemographicsForm({ errors, countries, professions }) {
        console.log("number of languages: "+demographicsData["numLanguages"]);
     };
 
-    const handleProfessionChange = (selectedList) => {
-       setProfession(selectedList);
-       demographicsData["profession"] = selectedList.join(",");
-       console.log("New profession: "+demographicsData["profession"]);
-    };
 
-    const handleProfessionSearch = (value) => {
-       setProfession(value);
-       if (!professions.includes(value) && value.trim() !== "") {
-          demographicsData["profession"] = value; 
-          console.log("New profession: "+demographicsData["profession"]);
-       }
-    };
+const syncProfession = (list, custom) => {
+   const typed = custom.trim();
+   const combined = [...list, ...(typed ? [typed] : [])].join(",");
+   demographicsData["profession"] = combined;
+   console.log("New profession: " + combined);
+};
+
+// user picked from the list
+const handleProfessionChange = (selectedList) => {
+   setProfession(selectedList);
+   setCustomProfession(""); // search box clears after a selection
+   syncProfession(selectedList, "");
+};
+
+// user typed in the search box
+const handleProfessionSearch = (value) => {
+   const isCustom = value.trim() !== "" && !professions.includes(value);
+   const custom = isCustom ? value : "";
+   setCustomProfession(custom);
+   syncProfession(profession, custom);
+};
+
+const commitCustomProfession = () => {
+   const typed = customProfession.trim();
+   setCustomProfession("");
+   if (!typed || profession.includes(typed)) return;
+
+   const updated = [...profession, typed];   // keep existing chips, add the typed one
+   setProfession(updated);
+   syncProfession(updated, "");
+};
 
     return (
        <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'left', marginLeft: '5%', }}>
@@ -1724,22 +1756,25 @@ function DemographicsForm({ errors, countries, professions }) {
                <Typography sx={{  }}> What best describes your profession? </Typography>
                    <Box sx={{borderRadius: 1, border: '1px solid #D4D0CF'}}>
 
-                   <Multiselect
-                   options={professions} // Options to display in the dropdown
-                   singleSelect={false}
-                   isObject={false}
-                   selectedValues={profession} // Preselected value to persist in dropdown
-                   onSelect={handleProfessionChange} // Function will trigger on select event
-                   onRemove={handleProfessionChange} // Function will trigger on remove event
-                   onSearch={handleProfessionSearch}
-                   displayValue="Enter and select profession" // Property name to display in the dropdown options
-                   onBlur={() => {
-                       if (professionInput && !professions.includes(professionInput)) {
-                       // Turn their raw string text into an array layout so chips render correctly
-                           setProfession([professionInput]); 
-                       }
-                   }}
-                   />                   
+<div
+   onBlur={(e) => {
+      // ignore blur caused by clicking an option inside the dropdown
+      if (!e.currentTarget.contains(e.relatedTarget)) {
+         commitCustomProfession();
+      }
+   }}
+>
+   <Multiselect
+      options={professions}
+      singleSelect={false}
+      isObject={false}
+      selectedValues={profession}
+      onSelect={handleProfessionChange}
+      onRemove={handleProfessionChange}
+      onSearch={handleProfessionSearch}
+      displayValue="Enter and select profession"
+   />
+</div>                 
                    
                    </Box>
                    {errors.profession && <Typography color="error" variant="caption">{errors.profession}</Typography>}
