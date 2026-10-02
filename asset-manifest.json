@@ -1,12 +1,45 @@
 {
   "files": {
-    "main.js": "/netlogo-video-sorter/static/js/main.1e944501.js",
+    "main.css": "/netlogo-video-sorter/static/css/main.f798aac4.css",
+    "main.js": "/netlogo-video-sorter/static/js/main.fa53aad6.js",
     "static/js/488.0cba3cec.chunk.js": "/netlogo-video-sorter/static/js/488.0cba3cec.chunk.js",
+    "static/media/barlow-latin-700-normal.woff2": "/netlogo-video-sorter/static/media/barlow-latin-700-normal.f9cfb3a3f4be2a0d8b17.woff2",
+    "static/media/barlow-latin-600-normal.woff2": "/netlogo-video-sorter/static/media/barlow-latin-600-normal.7750026b025162207e22.woff2",
+    "static/media/barlow-latin-400-normal.woff2": "/netlogo-video-sorter/static/media/barlow-latin-400-normal.bd1dfa097b26c2912bc2.woff2",
+    "static/media/barlow-latin-300-normal.woff2": "/netlogo-video-sorter/static/media/barlow-latin-300-normal.c837aed87a3eadd57d11.woff2",
+    "static/media/barlow-latin-500-normal.woff2": "/netlogo-video-sorter/static/media/barlow-latin-500-normal.21faf72ff9da543b9907.woff2",
+    "static/media/barlow-latin-600-normal.woff": "/netlogo-video-sorter/static/media/barlow-latin-600-normal.d22d69f2a2e1566213db.woff",
+    "static/media/barlow-latin-700-normal.woff": "/netlogo-video-sorter/static/media/barlow-latin-700-normal.cbc39d5d24e37043d691.woff",
+    "static/media/barlow-latin-400-normal.woff": "/netlogo-video-sorter/static/media/barlow-latin-400-normal.ae87fe97ae916c90ee64.woff",
+    "static/media/barlow-latin-300-normal.woff": "/netlogo-video-sorter/static/media/barlow-latin-300-normal.85a69f2505c48b06ad3f.woff",
+    "static/media/barlow-latin-500-normal.woff": "/netlogo-video-sorter/static/media/barlow-latin-500-normal.77bd5f122ee7f5c85dc2.woff",
+    "static/media/barlow-latin-ext-600-normal.woff2": "/netlogo-video-sorter/static/media/barlow-latin-ext-600-normal.160a6dbf2a66d1372279.woff2",
+    "static/media/barlow-latin-ext-700-normal.woff2": "/netlogo-video-sorter/static/media/barlow-latin-ext-700-normal.c8ddbd4823f4c7dc65ad.woff2",
+    "static/media/barlow-latin-ext-500-normal.woff2": "/netlogo-video-sorter/static/media/barlow-latin-ext-500-normal.ade58802b48eae4047e0.woff2",
+    "static/media/barlow-latin-ext-400-normal.woff2": "/netlogo-video-sorter/static/media/barlow-latin-ext-400-normal.5415fd14253885586e43.woff2",
+    "static/media/barlow-latin-ext-300-normal.woff2": "/netlogo-video-sorter/static/media/barlow-latin-ext-300-normal.6b5f867f36f409a2309a.woff2",
+    "static/media/barlow-latin-ext-600-normal.woff": "/netlogo-video-sorter/static/media/barlow-latin-ext-600-normal.d6912746efb73f5ed1ba.woff",
+    "static/media/barlow-latin-ext-700-normal.woff": "/netlogo-video-sorter/static/media/barlow-latin-ext-700-normal.7cb0d9c84d9cc85160f8.woff",
+    "static/media/barlow-latin-ext-500-normal.woff": "/netlogo-video-sorter/static/media/barlow-latin-ext-500-normal.cd4a4af8d2279ec35eb6.woff",
+    "static/media/barlow-latin-ext-400-normal.woff": "/netlogo-video-sorter/static/media/barlow-latin-ext-400-normal.8c2503dc723b739a224a.woff",
+    "static/media/barlow-latin-ext-300-normal.woff": "/netlogo-video-sorter/static/media/barlow-latin-ext-300-normal.78593d08090254af6db0.woff",
+    "static/media/barlow-vietnamese-600-normal.woff2": "/netlogo-video-sorter/static/media/barlow-vietnamese-600-normal.a860116e6084725a7f12.woff2",
+    "static/media/barlow-vietnamese-700-normal.woff2": "/netlogo-video-sorter/static/media/barlow-vietnamese-700-normal.22459e3d4a5e00dec6fe.woff2",
+    "static/media/barlow-vietnamese-500-normal.woff2": "/netlogo-video-sorter/static/media/barlow-vietnamese-500-normal.e17c572244fd8c7c65f6.woff2",
+    "static/media/barlow-vietnamese-400-normal.woff2": "/netlogo-video-sorter/static/media/barlow-vietnamese-400-normal.dc5a681d89efbabfce95.woff2",
+    "static/media/barlow-vietnamese-300-normal.woff2": "/netlogo-video-sorter/static/media/barlow-vietnamese-300-normal.6783d99df887826a7b05.woff2",
+    "static/media/barlow-vietnamese-600-normal.woff": "/netlogo-video-sorter/static/media/barlow-vietnamese-600-normal.00ec260be2c6299f4dcc.woff",
+    "static/media/barlow-vietnamese-700-normal.woff": "/netlogo-video-sorter/static/media/barlow-vietnamese-700-normal.583ebbe875e37a4f797f.woff",
+    "static/media/barlow-vietnamese-500-normal.woff": "/netlogo-video-sorter/static/media/barlow-vietnamese-500-normal.9ef7b29efa47a6634fcb.woff",
+    "static/media/barlow-vietnamese-300-normal.woff": "/netlogo-video-sorter/static/media/barlow-vietnamese-300-normal.ae2c1aeb199468af8c49.woff",
+    "static/media/barlow-vietnamese-400-normal.woff": "/netlogo-video-sorter/static/media/barlow-vietnamese-400-normal.b169262a1dfe09fa963f.woff",
     "index.html": "/netlogo-video-sorter/index.html",
-    "main.1e944501.js.map": "/netlogo-video-sorter/static/js/main.1e944501.js.map",
+    "main.f798aac4.css.map": "/netlogo-video-sorter/static/css/main.f798aac4.css.map",
+    "main.fa53aad6.js.map": "/netlogo-video-sorter/static/js/main.fa53aad6.js.map",
     "488.0cba3cec.chunk.js.map": "/netlogo-video-sorter/static/js/488.0cba3cec.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.1e944501.js"
+    "static/css/main.f798aac4.css",
+    "static/js/main.fa53aad6.js"
   ]
 }
