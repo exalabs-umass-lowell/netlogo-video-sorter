@@ -582,7 +582,7 @@ const restart = () => {
         behavior = s[0].id.split("/")[2];
     }
     setBehavior(s[0].id.split("/")[2]);
-    setBehavior(specificBehavior);
+    setBehavior("vision-mod");
     console.log("Number of items is "+String(items.length));
     console.log("Item first is "+s[0].url);
     setPool(s);
@@ -699,8 +699,8 @@ const restart = () => {
         </Box>
       
         <div style={{ display: "flex", gap: 12, alignItems: "stretch", flexWrap: "wrap", justifyContent: "center",}}>
-          <VideoCard item={pair[0]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="left" fadeAnimation={visible} />
-          <VideoCard item={pair[1]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="right" fadeAnimation={visible} />
+          <VideoCard item={pair[0]} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="left" fadeAnimation={visible} pairIndex={-1} />
+          <VideoCard item={pair[1]} onChoose={() => {setSelectedSample(true); setDemographics(false); setSamplePair(false);}} position="right" fadeAnimation={visible} pairIndex={-1} />
         </div> 
       </div>
       
@@ -800,8 +800,8 @@ const restart = () => {
          </Box>
       
          <div style={{ display: "flex", gap: 12, alignItems: "stretch", flexWrap: "wrap", justifyContent: "center",}}>
-            <VideoCard item={pair[0]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => onChoose("left")} position="left" fadeAnimation={visible} cardKey="left" />
-            <VideoCard item={pair[1]} reloadKey={reloadKey} setReloadKey={setReloadKey} onChoose={() => onChoose("right")} position="right" fadeAnimation={visible} cardKey="right" />
+            <VideoCard item={pair[0]} onChoose={() => onChoose("left")} position="left" fadeAnimation={visible} pairIndex={vidnum} />
+            <VideoCard item={pair[1]} onChoose={() => onChoose("right")} position="right" fadeAnimation={visible} pairIndex={vidnum} />
          </div>
          <div style={{ padding: '20px 24px 32px', maxWidth: '900px', margin: '0 auto', width: '100%'}}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: 'center',  marginBottom: '10px',}}>
@@ -863,20 +863,15 @@ function ProgressBar({ number, total }) {
     );
 }
 
-function VideoCard({ item, onChoose, position = "left", fadeAnimation, reloadKey, setReloadKey, cardKey }) {
-  const observerRef = useRef();
-
+function VideoCard({ item, onChoose, position = "left", fadeAnimation, pairIndex }) {
+  //const observerRef = useRef();
+  const [gifURL, setGifURL] = useState("");
+  
   useEffect(() => {
-      const observer = new IntersectionObserver(
+  /*    const observer = new IntersectionObserver(
         (entries) => {
           // When the element enters the viewport, update the key
           if (entries[0].isIntersecting) { 
-            /*const src = imgRef.current.src.split('?')[0];
-            imgRef.current.src = '';
-            // restart video with ref set to no
-            setTimeout(() => {
-              imgRef.current.src = `${src}?t=${Date.now()}`;
-            }, 0);*/
             setReloadKey(Date.now());
           }
         },
@@ -892,8 +887,12 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation, reloadKey
         if (currentElement) {
           observer.unobserve(currentElement);
         }
-      };
-  }, []);
+      };*/
+     if (item?.url) {
+        const url = `${process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "").replace(/\.gif$/i, ".gif")}?t=${Date.now()}`;
+        setGifURL(url);
+     }
+  }, [item?.url, item?.id, pairIndex]);
 
   if (!item) return null;
   return (
@@ -922,11 +921,11 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation, reloadKey
       }}
       onKeyDown={(e) => { if (e.key === "Enter") onChoose(); }}
     >
-      {item.url && (
-        <div ref={observerRef} style={{ lineHeight: 0, borderRadius: '2px', overflow: 'hidden', aspectRatio: '1', }}>
+      {gifURL && (
+        <div style={{ lineHeight: 0, borderRadius: '2px', overflow: 'hidden', aspectRatio: '1', }}>
           <img
-            key={item.url}
-            src={`${process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "").replace(/\.gif$/i, ".gif")}?t=${Date.now()}`}
+            key={gifURL}
+            src={gifURL}
             style={{ width: "100%", height: "100%", objectFit: "cover", display: 'block' }}
             alt="animation"
           />
@@ -1653,7 +1652,8 @@ function DemographicsForm({ errors, countries, professions }) {
     const [customProfession, setCustomProfession] = useState("");
     const ages = ["18 - 22 years", "23 - 27 years", "28 - 32 years",  "33 - 37 years", "38 - 42 years", "43 - 47 years"];
     const degrees = ["High School Diploma", "Bachelor's", "Graduate/Master's", "Ph.D/Doctorate"];
-   
+    const languageNums = ["1", "2", "3", "4 or more"];   
+
     const handleinterestsChange = (e) => {
        setinterests(e.target.value);
        demographicsData["interests"] = e.target.value;
@@ -1733,15 +1733,17 @@ function DemographicsForm({ errors, countries, professions }) {
            </Box>
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
                <Typography sx={{  }}> How many languages do you speak? </Typography>
-                   <Box sx={{borderRadius: 1, border: '1px solid #D4D0CF'}}>
-
-                   <TextField
-                   sx={{ width: '100%', }}
-                   onChange={handleNumLanguagesChange} // Function will trigger on change event
-                   displayValue="Enter number of languages spoken" // Property name to display in the dropdown options
-                   />            
-
-                   </Box>
+                   <Select value={numLanguages} required onChange={(e) => {
+                          setNumLanguages(e.target.value);
+                          demographicsData["numLanguages"] = e.target.value; 
+                          console.log("demographics data: ", demographicsData["numLanguages"]);
+                       }} displayEmpty>
+                       {languageNums.map((s) => (
+                           <MenuItem  key={s} value={s}>
+                                {s}
+                           </MenuItem>
+                       ))}
+                   </Select>
                    {errors.numLanguages && <Typography color="error" variant="caption">{errors.numLanguages}</Typography>}
            </Box>
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
@@ -1762,6 +1764,17 @@ function DemographicsForm({ errors, countries, professions }) {
 }
 
 /*
+
+                   <Box sx={{borderRadius: 1, border: '1px solid #D4D0CF'}}>
+
+                   <TextField
+                   sx={{ width: '100%', }}
+                   onChange={handleNumLanguagesChange} // Function will trigger on change event
+                   displayValue="Enter number of languages spoken" // Property name to display in the dropdown options
+                   />            
+
+                   </Box>
+
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
                <Typography sx={{  }}> What best describes your profession? </Typography>
                    <Box sx={{borderRadius: 1, border: '1px solid #D4D0CF'}}>
@@ -1847,11 +1860,14 @@ function SurveyHeader() {
    return (
       <Box sx={{
          width: '100%',
-         height: 'flex',
+         height: '50px',
          display: 'flex',
+         flexDirection: 'row',
+         alignItems: 'center',
          backgroundColor: "rgba(0,0,0,0.5)",
          position: 'fixed', top:'0px', left:'40px',
-         //zIndex: 100,
+         zIndex: 10000,
+         paddingLeft: '20px',
          //padding: '0% 15%',
       }}>
          <Box 
@@ -1860,6 +1876,15 @@ function SurveyHeader() {
             src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
          />
          <Typography sx={{ margin: '13px', fontFamily: "'DM Mono', monospace", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#FFF', borderLeft: '20px solid rgba(0,0,0,0)', }}> Exalabs UMass Lowell </Typography>
+         <Button sx={{
+            ...buttonStyle, 
+            top:'0px', margin: '0px 0 0', marginLeft: 'auto', marginRight: '80px',}} variant="contained">
+            <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"  
+              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", color: "rgba(0,0,0,0.5)", textDecoration: 'none',}}
+            >
+              MORE INFO
+            </a>
+         </Button>
       </Box>
    );   
 }
