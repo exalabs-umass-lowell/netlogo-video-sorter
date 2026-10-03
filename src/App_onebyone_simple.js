@@ -834,7 +834,7 @@ function ProgressBar({ number, total }) {
 
 function VideoCard({ item, onChoose, position = "left", fadeAnimation, pairIndex }) {
   //const observerRef = useRef();
-  const [gifURL, setGifURL] = useState("");
+  const [videoURL, setVideoURL] = useState("");
   
   useEffect(() => {
   /*    const observer = new IntersectionObserver(
@@ -858,8 +858,10 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation, pairIndex
         }
       };*/
      if (item?.url) {
-        const url = `${process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "").replace(/\.gif$/i, ".gif")}?t=${Date.now()}`;
-        setGifURL(url);
+        // vision-mod videos were re-encoded from GIF to compressed mp4 (5-7x smaller);
+        // this assumes a *.compressed.mp4 exists alongside the original *.gif.
+        const url = `${process.env.PUBLIC_URL + item.url.replace("/netlogo-video-sorter", "").replace(/\.gif$/i, ".compressed.mp4")}?t=${Date.now()}`;
+        setVideoURL(url);
      }
   }, [item?.url, item?.id, pairIndex]);
 
@@ -891,13 +893,17 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation, pairIndex
       }}
       onKeyDown={(e) => { if (e.key === "Enter") onChoose(); }}
     >
-      {gifURL && (
+      {videoURL && (
         <div style={{ lineHeight: 0, borderRadius: '2px', overflow: 'hidden', aspectRatio: '1', }}>
-          <img
-            key={gifURL}
-            src={gifURL}
+          <video
+            key={videoURL}
+            src={videoURL}
+            autoPlay
+            loop
+            muted
+            playsInline
             style={{ width: "100%", height: "100%", objectFit: "cover", display: 'block' }}
-            alt="animation"
+            aria-label="Swarm animation"
           />
         </div>
       )}
