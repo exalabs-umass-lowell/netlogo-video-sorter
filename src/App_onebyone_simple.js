@@ -723,17 +723,23 @@ const restart = () => {
            <Typography sx={{fontWeight: 'bold', fontSize: { xs: 24, sm: 36, md: 50 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', textAlign: 'center', position: 'relative', margin: { xs: '24px auto', sm: '50px auto' }, maxWidth: '900px', color: '#000',}}>
         Please hit Submit.
        </Typography>
-           <Typography sx={{fontWeight: '', fontSize: { xs: 20, sm: 28, md: 35 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
+           {/* <Typography sx={{fontWeight: '', fontSize: { xs: 20, sm: 28, md: 35 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
         And thanks for participating!
-       </Typography>
+       </Typography> */}
         </Box>
 
         <EmailBox xpos='0%' ypos='20%' userIP={userIPAddress}/>
-<Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#000', border: '1px solid #000', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)', color: '#FFF', border: '1px solid #000',}, fontSize: '25px', }} onClick={restart}>Restart</Button>
+{/* <Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#000', border: '1px solid #000', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)', color: '#FFF', border: '1px solid #000',}, fontSize: '25px', }} onClick={restart}>Restart</Button> */}
+        {/* <Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#000', border: '1px solid #000', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)', color: '#FFF', border: '1px solid #000',}, fontSize: '25px', }} ></Button> */}
+
         <Box>
-           <Typography sx={{fontWeight: '', fontSize: '20px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
+        <Typography sx={{fontWeight: '', fontSize: { xs: 20, sm: 28, md: 35 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
+        And thanks for participating!
+       </Typography>
+        <Typography sx={{fontWeight: '', fontSize: '20px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
         To learn more, click on&nbsp; <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"  style={{ fontFamily: "'Barlow', Arial, sans-serif", color: '#31F5A7', }}> this link</a>!
        </Typography>
+
         </Box>
         
        </div>
