@@ -26,9 +26,33 @@
 	src: url('fonts/barlow-latin-700-normal.woff2') format('woff2');
 }
 
+:root {
+	--bg-default: #E4EBED;
+	--bg-paper: #ffffff;
+	--text-primary: #000000;
+	--nav-hover: #CAD9D9;
+	--border: rgba(0,0,0,0.15);
+	--link-color: #2a2a8c;
+}
+
+/* Matches the dark palette used by the live survey app (src/index.js) so
+   both pages look consistent when the OS is in dark mode. */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg-default: #121418;
+		--bg-paper: #1e2128;
+		--text-primary: #f0f0f0;
+		--nav-hover: #2a2e38;
+		--border: rgba(255,255,255,0.2);
+		--link-color: #8fa6ff;
+	}
+}
+
 body {
 	margin: 0;
 	font-family: 'Barlow', Arial, sans-serif;
+	color: var(--text-primary);
+	background-color: var(--bg-default);
 }
 
 .toplogo {
@@ -60,7 +84,7 @@ body {
 }
 
 .full-container {
-	background-color: #E4EBED;
+	background-color: var(--bg-default);
 	max-width: 1000px;
 }
 
@@ -115,6 +139,7 @@ body {
         white-space: nowrap;
 	box-sizing: border-box;
 	text-decoration: none;
+	color: var(--link-color);
 }
 
 .nav-span:hover {
@@ -124,13 +149,13 @@ body {
         white-space: nowrap;
 	box-sizing: border-box;
 	text-decoration: none;
-	background-color: #CAD9D9;
+	background-color: var(--nav-hover);
 }
 
 .mainheader {
 	display: block;
 	font-size: 30px;
-	color: '#fff';
+	color: var(--text-primary);
 	text-align: center;
 	padding-left: 150px;
 	font-weight: 600;
@@ -143,7 +168,7 @@ body {
 .submainheader {
 	display: block;
 	font-size: 15px;
-	color: '#fff';
+	color: var(--text-primary);
 	text-align: center;
 	padding-left: 150px;
 	flex-direction: 'column';
@@ -229,6 +254,9 @@ body {
 	font-weight: bold;
 	padding-top: 30px;
 	padding: 12px 20px;
+	background-color: var(--bg-paper);
+	color: var(--text-primary);
+	border: 1px solid var(--border);
 	box-shadow:  0 2px 8px rgba(0,0,0,0.2);
 }
 
