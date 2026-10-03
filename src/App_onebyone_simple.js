@@ -20,6 +20,7 @@ import {   Button,
   Select, SelectChangeEvent } from '@mui/material';
 import Multiselect from 'multiselect-react-dropdown';
 import { styled } from '@mui/system';
+import { useTheme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import emailjs from 'emailjs-com';
 import axios from "axios";
@@ -35,6 +36,7 @@ const REGISTRATION_API_URL = "https://netlogo-survey-registration.onrender.com";
 
 
 export default function VideoPairApp_simple() {
+  const theme = useTheme(); // follows the OS light/dark preference, set in index.js
   // states
   const [complete, setComplete] = useState(false); // has user completed survey already
   const [userEmail, setUserEmail] = useState(null); // user email
@@ -586,15 +588,15 @@ const restart = () => {
   }
   if (complete) {
     return (
-      <div style={ headerStyle }>
+      <div style={ headerStyle(theme) }>
          <Box sx={{
            width: '100%',
            height: 'flex',
            display: 'flex',
-           backgroundColor: "rgba(0,0,0,0.5)",
-           position: 'fixed', top:'0px', left: '0px', 
+           backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.5)',
+           position: 'fixed', top:'0px', left: '0px',
          }}>
-           <Box 
+           <Box
               component="img"
               sx={{height:'50px',alignItems:'center',justifyContent:'center',display:'flex',top:'0px',left:'0px',}}
               src={`${process.env.PUBLIC_URL}/exalabs-logo.png`}
@@ -608,11 +610,11 @@ const restart = () => {
   }
   if (startInstructions) {
     return (
-      <div style={ headerStyle }>
+      <div style={ headerStyle(theme) }>
         <SurveyHeader />
         <MainHeader />
         <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column',}}>
-            <Button sx={buttonStyle} variant="contained" onClick={() => {
+            <Button sx={buttonStyle(theme)} variant="contained" onClick={() => {
                  // goes to the tutorial screen
                  setStartInstructions(false);
                  setPreSurvey(true);
@@ -621,7 +623,7 @@ const restart = () => {
             </Button>
 
         </Box>
-        <Button sx={buttonStyle} variant="contained" onClick={() => {
+        <Button sx={buttonStyle(theme)} variant="contained" onClick={() => {
            // goes to the next screen for getting user demographics
            console.log("clicked the start");
            setStartInstructions(false);
@@ -635,7 +637,7 @@ const restart = () => {
   }
   if (preSurvey) {
     return (
-      <div style={headerStyle}>
+      <div style={headerStyle(theme)}>
         <SurveyHeader />
         <InstructionBoard msgs={ presurvey_messages } nextLink={samplePair} setNextLink={setSamplePair} currLink={preSurvey} setCurrLink={setPreSurvey} nextText={"next"} textSize={"25px"}/>
       </div>
@@ -643,11 +645,11 @@ const restart = () => {
   }
   if (samplePair) { // display a sample pair for the user to select from
       return (
-          <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: '#f5f3ef', }}>
+          <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: theme.palette.background.default, }}>
     <div style={{ fontFamily: "'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
       <div>
         <SurveyHeader />
-        <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', margin: '0 auto', color: '#000' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', margin: '0 auto', color: 'text.primary' }}>
           <PromptText fontSize={25} />
         </Box>
       
@@ -663,7 +665,7 @@ const restart = () => {
   }
   if (selectedSample) {
     return (
-      <div style={headerStyle}>
+      <div style={headerStyle(theme)}>
         <SurveyHeader />
         <InstructionBoard msgs={ final_message } nextLink={demographics} setNextLink={setDemographics} currLink={selectedSample} setCurrLink={setSelectedSample} nextText={"start"} textSize={"25px"} />
       </div>
@@ -671,7 +673,7 @@ const restart = () => {
   }
   if (demographics) {
     return (
-      <div style={headerStyle}>
+      <div style={headerStyle(theme)}>
       <SurveyHeader />
       <Box sx={{
         borderRadius: '10px',
@@ -680,12 +682,12 @@ const restart = () => {
         width: { xs: 'calc(100% - 32px)', sm: '80%', md: '50%' },
         maxWidth: 700,
         boxSizing: 'border-box',
-        border: '2px solid #001000',
+        border: `2px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.4)' : '#001000'}`,
         mt: { xs: 3, md: '10%' },
         mb: 4,
       }}>
         <DemographicsForm errors={errors} countries={countries} professions={professions}/>
-        <Button sx={buttonStyle} variant="contained" onClick={() => {
+        <Button sx={buttonStyle(theme)} variant="contained" onClick={() => {
            // goes to the next screen for getting user demographics
            if (validate()) {
               setDemographics(false);
@@ -717,10 +719,10 @@ const restart = () => {
     
     return (
       <>
-      <div style={headerStyle}>
+      <div style={headerStyle(theme)}>
         <SurveyHeader />
         <Box sx={{ justifyContent: 'center', alignItems: 'center', position: 'relative', px: 2, }}>
-           <Typography sx={{fontWeight: 'bold', fontSize: { xs: 24, sm: 36, md: 50 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', textAlign: 'center', position: 'relative', margin: { xs: '24px auto', sm: '50px auto' }, maxWidth: '900px', color: '#000',}}>
+           <Typography sx={{fontWeight: 'bold', fontSize: { xs: 24, sm: 36, md: 50 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', textAlign: 'center', position: 'relative', margin: { xs: '24px auto', sm: '50px auto' }, maxWidth: '900px', color: 'text.primary',}}>
         Please hit Submit.
        </Typography>
            {/* <Typography sx={{fontWeight: '', fontSize: { xs: 20, sm: 28, md: 35 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
@@ -733,10 +735,10 @@ const restart = () => {
         {/* <Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#000', border: '1px solid #000', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)', color: '#FFF', border: '1px solid #000',}, fontSize: '25px', }} ></Button> */}
 
         <Box>
-        <Typography sx={{fontWeight: '', fontSize: { xs: 20, sm: 28, md: 35 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
+        <Typography sx={{fontWeight: '', fontSize: { xs: 20, sm: 28, md: 35 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: 'text.primary',}}>
         And thanks for participating!
        </Typography>
-        <Typography sx={{fontWeight: '', fontSize: '20px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
+        <Typography sx={{fontWeight: '', fontSize: '20px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: 'text.primary',}}>
         To learn more, click on&nbsp; <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"  style={{ fontFamily: "'Barlow', Arial, sans-serif", color: '#31F5A7', }}> this link</a>!
        </Typography>
 
@@ -758,11 +760,11 @@ const restart = () => {
   }
   
   return (
-    <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: '#f5f3ef', }}>
+    <div style={{ justifyContent: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: theme.palette.background.default, }}>
     <div style={{ fontFamily: "'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial", alignItems: 'stretch', }}>
       <div>
          <SurveyHeader /> 
-         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', color: '#000' }}>
+         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 25, padding: '60px', color: 'text.primary' }}>
             <PromptText fontSize={25} />
          </Box>
       
@@ -872,7 +874,8 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation, pairIndex
         // capped against viewport height too, so stacked cards still fit on short/mobile screens
         width: { xs: 'min(100%, 55vh)', sm: '500px' },
 		maxWidth: "100%",
-        border: "1.5px solid rgba(26,25,23,0.1)",
+        border: '1.5px solid',
+        borderColor: 'divider',
         borderRadius: 8,
         padding: '20px',
         margin: {
@@ -880,7 +883,7 @@ function VideoCard({ item, onChoose, position = "left", fadeAnimation, pairIndex
 			md: '0 2% 0 2%' // '0 2% 0 16%' : '0 16% 0 2%',
 		},
         boxSizing: "border-box",
-        backgroundColor: '#ffffff',
+        backgroundColor: 'background.paper',
         '&:hover': { boxShadow: '0px 0px 40px #54A6F0' },
         '&:active': { transform: 'translateY(0px) scale(0.995)' },
         opacity: fadeAnimation ? 1 : 0,
@@ -1057,7 +1060,7 @@ function startBoard({ children }) {
 // startBoard <-- instructionCard <-- presurvey_messages
 // instructionboard <-- instructionCard <-- presurvey_messages
 
-const start_messages = [{ type: "instruction", textBefore: `Hello!\nWelcome to the swarm complexity ranking survey!\nClick `, bold: "Next Page", textAfter: " to start the survey."}];
+const start_messages = [{ type: "instruction", textBefore: `Hello!\nWelcome to the swarm complexity survey!\nClick `, bold: "Next Page", textAfter: " to start the survey."}];
 const presurvey_messages = [{type: "instruction", textBefore: "", bold: `GOAL OF THE STUDY:\n\n`, textAfter: `This survey aims to determine the relative complexity of swarms based on which videos you select as more complex in a series of pairwise comparisons.\n`}, "You will be presented with a series of videos that you will be asked to rank according to complexity.",
         "A series of pairs of videos will be displayed, where one video is more complex than the other. Your task is to select which you think is the most complex.",
                 "We will show you a sample pair now."];
@@ -1066,8 +1069,9 @@ const final_message = [{ type: "instruction", textBefore: "Click the ", bold: "S
 
 
 function InstructionCard({ psg, textSize }) {
+   const theme = useTheme();
 
-   const newlinerender = (text) => 
+   const newlinerender = (text) =>
       text.split('\n').map((line, i, arr) => (
           <span key={i}>
               {line}
@@ -1080,8 +1084,8 @@ function InstructionCard({ psg, textSize }) {
       boxSizing: 'border-box',
       margin: '0 auto',
       borderRadius: '10px',
-      backgroundColor: 'white',
-      color: '#003366',
+      backgroundColor: theme.palette.background.paper,
+      color: theme.palette.mode === 'dark' ? '#bcd4ff' : '#003366',
       padding: 'clamp(24px, 12vh, 150px) 20px',
       fontSize: `clamp(17px, 4.5vw, ${textSize})`,
    };
@@ -1119,7 +1123,7 @@ function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink, 
                    borderRadius: { xs: '20px', sm: '50px' },
                    padding: { xs: '16px 12px', sm: '16px 20px' },
                    lineHeight: '1.35',
-                   background: '#FFF',
+                   background: 'background.paper',
                    display: 'flex',
                    flexDirection: 'column',
                    gap: { xs: 1, sm: '20px' },
@@ -1136,7 +1140,7 @@ function InstructionBoard({ msgs, nextLink, setNextLink, currLink, setCurrLink, 
              fontSize: { xs: '1.5rem', sm: '2.125rem' },
              letterSpacing: { xs: '0.1em', sm: '0.18em' },
              textTransform: 'uppercase',
-             color: '#003366',
+             color: (theme) => theme.palette.mode === 'dark' ? '#bcd4ff' : '#003366',
            }}>
              Instructions
          </Typography>
@@ -1698,7 +1702,7 @@ function DemographicsForm({ errors, countries, professions }) {
            </Box>
            <Box sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}>
                <Typography sx={{  }}> What are your interests? </Typography>
-                   <Box sx={{borderRadius: 1, border: '1px solid #D4D0CF'}}>
+                   <Box sx={{borderRadius: 1, border: '1px solid', borderColor: 'divider'}}>
 
                    <TextField
                    sx={{ width: '100%', }}
@@ -1758,13 +1762,20 @@ function DemographicsForm({ errors, countries, professions }) {
 
 
 /* Styles */
-const headerStyle = {
-justifyContent: 'center', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden', background: `url('general-white-blue.jpg')`, backgroundSize: '100% 100%, 100% 100%, contain', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundBlendMode: 'multiply',
-};
+// The hero wallpaper is a light image, so it only makes sense in light mode;
+// dark mode falls back to a solid theme-matched background instead.
+const headerStyle = (theme) => ({
+  justifyContent: 'center', alignItems: 'center', flexDirection: 'column', display: 'flex', width: '100%', minHeight: '100vh', overflowX: 'hidden',
+  background: theme.palette.mode === 'dark' ? theme.palette.background.default : `url('general-white-blue.jpg')`,
+  backgroundSize: theme.palette.mode === 'dark' ? undefined : 'cover',
+  backgroundPosition: theme.palette.mode === 'dark' ? undefined : 'center',
+  backgroundRepeat: theme.palette.mode === 'dark' ? undefined : 'no-repeat',
+  backgroundBlendMode: theme.palette.mode === 'dark' ? undefined : 'multiply',
+});
 
-const buttonStyle = {
-margin: '48px 0 0', backgroundColor: "#FFF", fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#9a9690', border: '1px solid rgba(26,25,23,0.2)', borderRadius: '4px', padding: '10px 28px', '&:hover': { color: '#1a1917', borderColor: '#2a2a8c', backgroundColor: 'transparent' },
-};
+const buttonStyle = (theme) => ({
+  margin: '48px 0 0', backgroundColor: theme.palette.background.paper, fontWeight: 'bold', fontSize: '15px', letterSpacing: '0.15em', textTransform: 'uppercase', color: theme.palette.text.secondary, border: `1px solid ${theme.palette.divider}`, borderRadius: '4px', padding: '10px 28px', '&:hover': { color: theme.palette.text.primary, borderColor: theme.palette.primary.main, backgroundColor: 'transparent' },
+});
 
 function PromptText({fontSize}) {
    return (
@@ -1795,8 +1806,8 @@ function MainHeader() {
       pt: { xs: 5, sm: 8, md: '100px' },
       pb: { xs: 2, md: 4 },
     }}>
-      <Typography component="h1" sx={{fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: { xs: 32, sm: 48, md: 70 }, lineHeight: 1.15, alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', color: '#000', }}>
-        Welcome to the swarm complexity ranking survey!
+      <Typography component="h1" sx={{fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: { xs: 32, sm: 48, md: 70 }, lineHeight: 1.15, alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', color: 'text.primary', }}>
+        Welcome to the swarm complexity survey!
       </Typography>
     </Box>
   );
@@ -1804,6 +1815,7 @@ function MainHeader() {
 
 /* Page Header code */
 function SurveyHeader() {
+   const theme = useTheme();
    return (
       <Box sx={{
          width: '100%',
@@ -1812,7 +1824,7 @@ function SurveyHeader() {
          display: 'flex',
          flexDirection: 'row',
          alignItems: 'center',
-         backgroundColor: "rgba(0,0,0,0.5)",
+         backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.5)',
          position: 'fixed', top:'0px', left:0,
          zIndex: 10000,
          paddingLeft: '58px',
@@ -1826,10 +1838,10 @@ function SurveyHeader() {
          />
          <Typography sx={{ margin: { xs: '6px', sm: '13px' }, fontFamily: "'Barlow', Arial, sans-serif", fontWeight: 'bold', fontSize: { xs: 11, sm: 15 }, letterSpacing: { xs: '0.06em', sm: '0.16em' }, textTransform: 'uppercase', color: '#FFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', }}> Exalabs UMass Lowell </Typography>
          <Button sx={{
-            ...buttonStyle,
+            ...buttonStyle(theme),
             top:'0px', margin: '0px 0 0', marginLeft: 'auto', marginRight: { xs: 0, sm: '80px' }, padding: { xs: '6px 10px', sm: '10px 28px' },}} variant="contained">
             <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"
-              style={{ fontFamily: "'Barlow', Arial, sans-serif", color: "rgba(0,0,0,0.5)", textDecoration: 'none', fontSize: 'inherit',}}
+              style={{ fontFamily: "'Barlow', Arial, sans-serif", color: theme.palette.text.secondary, textDecoration: 'none', fontSize: 'inherit',}}
             >
               MORE INFO
             </a>
