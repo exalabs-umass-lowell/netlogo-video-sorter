@@ -25,7 +25,7 @@ import emailjs from 'emailjs-com';
 import axios from "axios";
 
 // VideoPairApp.jsx
-let demographicsData = {"age": 0, "highestDegree": "", "country": "", "interests": "", "profession": ""};
+let demographicsData = {"age": 0, "highestDegree": "", "numLanguages": "", "country": "", "interests": "", "profession": ""};
 let rankedVideos = {};
 let selectionTimes = {};
 let notSelectionTimes = {};
@@ -306,7 +306,8 @@ useEffect(() => {
        console.log(demographicsData);
        if (demographicsData["age"] == 0 || demographicsData["age"] == "Age") recentErrors.age = "Please select an age range.";
        if (demographicsData["highestDegree"] == "" || demographicsData["highestDegree"] == "Degree") recentErrors.highestDegree = "Please select from the dropdown the highest degree you have attained.";
-       if (demographicsData["numLanguages"] <= 0 || !Number.isInteger(Number(demographicsData["numLanguages"]))) recentErrors.numLanguages = "Entry must be a number greater than 0.";
+      //  if (demographicsData["numLanguages"] <= 0 || !Number.isInteger(Number(demographicsData["numLanguages"]))) recentErrors.numLanguages = "Entry must be a number greater than 0.";
+       if (demographicsData["numLanguages"] == "") recentErrors.numLanguages = "Please select from the dropdown the number of languages you can speak.";
        if (demographicsData["interests"] == "" || demographicsData["interests"] == "Enter interests") recentErrors.interests = "Please enter any interests you have.";
        // if (demographicsData["profession"] == "" || demographicsData["profession"] == "Professions") recentErrors.profession = "Please enter your current profession from the dropdown.";
        console.log(demographicsData);
@@ -718,12 +719,12 @@ const restart = () => {
       <>
       <div style={headerStyle}>
         <SurveyHeader />
-        <Box sx={{ justifyContent: 'center', alignItems: 'center', position: 'relative', }}>
-           <Typography sx={{fontWeight: 'bold', fontSize: '50px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '50px', color: '#000',}}>
-        Survey complete
+        <Box sx={{ justifyContent: 'center', alignItems: 'center', position: 'relative', px: 2, }}>
+           <Typography sx={{fontWeight: 'bold', fontSize: { xs: 24, sm: 36, md: 50 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', textAlign: 'center', position: 'relative', margin: { xs: '24px auto', sm: '50px auto' }, maxWidth: '900px', color: '#000',}}>
+        Please hit Submit.
        </Typography>
-           <Typography sx={{fontWeight: '', fontSize: '35px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
-        
+           <Typography sx={{fontWeight: '', fontSize: { xs: 20, sm: 28, md: 35 }, fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
+        And thanks for participating!
        </Typography>
         </Box>
 
@@ -731,7 +732,7 @@ const restart = () => {
 <Button sx= {{ gap: '50px', margin: '50px 0', borderBottom: '100px', color: '#000', border: '1px solid #000', '&:hover': { backgroundColor: 'rgba(150, 220, 255, 0.9)', color: '#FFF', border: '1px solid #000',}, fontSize: '25px', }} onClick={restart}>Restart</Button>
         <Box>
            <Typography sx={{fontWeight: '', fontSize: '20px', fontFamily: "'Barlow', Arial, sans-serif", alignItems: 'center', justifyContent: 'center', display: 'flex', position: 'relative', margin: '30px', color: '#000',}}>
-        To learn more, click on <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"  style={{ fontFamily: "'Barlow', Arial, sans-serif", color: '#31F5A7', }}> this link</a>!
+        To learn more, click on&nbsp; <a href={`${process.env.PUBLIC_URL}/info.html`} rel="noopener noreferrer"  style={{ fontFamily: "'Barlow', Arial, sans-serif", color: '#31F5A7', }}> this link</a>!
        </Typography>
         </Box>
         
